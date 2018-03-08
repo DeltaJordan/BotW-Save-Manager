@@ -9,21 +9,25 @@ namespace BOTW_SaveConv
     {
         public static string From;
         public static string To;
+        private static List<string> Items = new List<string>
+        {"Item", "Weap", "Armo", "Fire", "Norm", "IceA", "Elec", "Bomb", "Anci", "Anim",
+        "Obj_", "Game", "Dm_N", "Dm_A", "Dm_E", "Dm_P", "FldO", "Gano", "Gian", "Grea",
+        "KeyS", "Kokk", "Liza", "Mann", "Mori", "Npc_", "OctO", "Octa", "Octa", "arro",
+        "Pict", "PutR", "Rema", "Site", "TBox", "TwnO", "Prie", "Dye0", "Dye1", "Map",
+        "Play", "Oasi", "Cele", "Wolf", "Gata", "Ston", "Kaka", "Soji", "Hyru", "Powe",
+        "Lana", "Hate", "Akka", "Yash", "Dung", "BeeH", "Boar", "Boko", "Brig", "DgnO" };
 
         private static void Main(string[] args)
         {
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "option.sav"))
             {
-                Console.WriteLine("BOTW_SaveConv");
-                Console.WriteLine("");
-                Console.WriteLine("This tool is still in beta and might not be perfect yet, so please make a backup of your save before using it.");
-                Console.WriteLine("");
+                Console.WriteLine("BOTW_SaveConv" + Environment.NewLine);
+                Console.WriteLine("This tool is still in beta and might not be perfect yet, so please make a backup of your save before using it." + Environment.NewLine);
                 Console.WriteLine("Press Y to continue, press any other key to abort.");
                 if (Console.ReadKey().Key != ConsoleKey.Y)
                     Environment.Exit(0);
                 else
                     ClearLine();
-
 
                 foreach (string file in Directory.EnumerateFiles(Path.GetDirectoryName(AppDomain.CurrentDomain.BaseDirectory), "*.sav", SearchOption.AllDirectories))
                 {
@@ -45,12 +49,12 @@ namespace BOTW_SaveConv
                             From = "Switch";
                             To = "WiiU";
                         }
-                        Console.WriteLine("\n" + From + " version of BOTW detected, starting conversion to the " + To + " version...\n");
+                        Console.WriteLine(Environment.NewLine + From + " version of BOTW detected, starting conversion to the " + To + " version..." + Environment.NewLine);
                     }
 
                     using (var progress = new ProgressBar())
                     {
-                        Console.WriteLine("\nProcessing " + Path.GetFileName(Path.GetDirectoryName(file)) + "/" + Path.GetFileName(file));
+                        Console.WriteLine(Environment.NewLine + "Processing " + Path.GetFileName(Path.GetDirectoryName(file)) + "/" + Path.GetFileName(file));
                         for (int h = 0; h < f.Length / 4; h++)
                         {
                             br.BaseStream.Position = h * 4;
@@ -82,15 +86,13 @@ namespace BOTW_SaveConv
                     }
                     br.Close();
                 }
-                Console.WriteLine("\nConversion " + From + "->" + To + " done!");
+                Console.WriteLine(Environment.NewLine + "Conversion " + From + "->" + To + " done!");
             }
             else
             {
                 Console.WriteLine("BOTW_SaveConv");
-                Console.WriteLine("by WemI0");
-                Console.WriteLine("");
-                Console.WriteLine("Convert WiiU <-> Switch BOTW Savegame");
-                Console.WriteLine("");
+                Console.WriteLine("by WemI0" + Environment.NewLine);
+                Console.WriteLine("Converts WiiU <-> Switch BOTW Savegame" + Environment.NewLine);
                 Console.WriteLine("Usage: Put 'BOTW_SaveConv.exe' into the folder that contains option.sav, and run it");
                 Console.ReadLine();
                 Environment.Exit(0);
@@ -114,71 +116,7 @@ namespace BOTW_SaveConv
         public static bool CheckString(byte[] toCheck)
         {
             string Object = System.Text.Encoding.UTF8.GetString(toCheck);
-
-            List<string> list = new List<string>();
-            list.Add("Item");
-            list.Add("Weap");
-            list.Add("Armo");
-            list.Add("Fire");
-            list.Add("Norm");
-            list.Add("IceA");
-            list.Add("Elec");
-            list.Add("Bomb");
-            list.Add("Anci");
-            list.Add("Anim");
-            list.Add("Obj_");
-            list.Add("Game");
-            list.Add("Dm_N");
-            list.Add("Dm_A");
-            list.Add("Dm_E");
-            list.Add("Dm_P");
-            list.Add("FldO");
-            list.Add("Gano");
-            list.Add("Gian");
-            list.Add("Grea");
-            list.Add("KeyS");
-            list.Add("Kokk");
-            list.Add("Liza");
-            list.Add("Mann");
-            list.Add("Mori");
-            list.Add("Npc_");
-            list.Add("OctO");
-            list.Add("Octa");
-            list.Add("Octa");
-            list.Add("arro");
-            list.Add("Pict");
-            list.Add("PutR");
-            list.Add("Rema");
-            list.Add("Site");
-            list.Add("TBox");
-            list.Add("TwnO");
-            list.Add("Prie");
-            list.Add("Dye0");
-            list.Add("Dye1");
-            list.Add("Map");
-            list.Add("Play");
-            list.Add("Oasi");
-            list.Add("Cele");
-            list.Add("Wolf");
-            list.Add("Gata");
-            list.Add("Ston");
-            list.Add("Kaka");
-            list.Add("Soji");
-            list.Add("Hyru");
-            list.Add("Powe");
-            list.Add("Lana");
-            list.Add("Hate");
-            list.Add("Akka");
-            list.Add("Yash");
-            list.Add("Dung");
-            list.Add("BeeH");
-            list.Add("Boar");
-            list.Add("Boko");
-            list.Add("Brig");
-            list.Add("DgnO");
-
-            bool a = list.Any(Object.Contains);
-            return a;
+            return Items.Any(Object.Contains);
         }
     }
 }
