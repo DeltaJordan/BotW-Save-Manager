@@ -9,6 +9,8 @@ namespace BOTW_SaveConv
     {
         public static string From;
         public static string To;
+        public static bool Skip;
+
         private static List<string> Items = new List<string>
         {"Item", "Weap", "Armo", "Fire", "Norm", "IceA", "Elec", "Bomb", "Anci", "Anim",
         "Obj_", "Game", "Dm_N", "Dm_A", "Dm_E", "Dm_P", "FldO", "Gano", "Gian", "Grea",
@@ -60,12 +62,22 @@ namespace BOTW_SaveConv
                             br.BaseStream.Position = h * 4;
                             byte[] EndianConv = br.ReadBytes(Convert.ToInt32(4));
 
-                            if (ByteArrayToString(EndianConv) == "7B74E117" || ByteArrayToString(EndianConv) == "17E1747B") // skip horse name
+                            if (ByteArrayToString(EndianConv) == "7B74E117" || ByteArrayToString(EndianConv) == "17E1747B" || ByteArrayToString(EndianConv) == "D913B769" || ByteArrayToString(EndianConv) == "69B713D9" || ByteArrayToString(EndianConv) == "B666D246" || ByteArrayToString(EndianConv) == "46D266B6" || ByteArrayToString(EndianConv) == "021A6FF2" || ByteArrayToString(EndianConv) == "F26F1A02") // skip misc string
                             {
-                                h = h + 0xC0;
+                                Array.Reverse(EndianConv);
+
+                                BinaryWriter EndianUpd = new BinaryWriter(fs);
+                                fs.Position = h * 4;
+                                EndianUpd.Write(EndianConv);
+                                h++;
+                                Skip = true;
+                            }
+                            else
+                            {
+                                Skip = false;
                             }
 
-                            if (CheckString(EndianConv) == false) // skip item string
+                            if (CheckString(EndianConv) == false && Skip == false) // skip item string
                             {
                                 Array.Reverse(EndianConv);
 
@@ -73,9 +85,21 @@ namespace BOTW_SaveConv
                                 fs.Position = h * 4;
                                 EndianUpd.Write(EndianConv);
                             }
-                            else
+                            else if (Skip == false)
                             {
-                                h = h + 0x1F;
+                                h++;
+                                for (int i = 0; i < 16; i++)
+                                {
+                                    br.BaseStream.Position = (h + (i * 2)) * 4;
+                                    byte[] EndianConv1 = br.ReadBytes(Convert.ToInt32(4));
+
+                                    Array.Reverse(EndianConv1);
+
+                                    BinaryWriter EndianUpd = new BinaryWriter(fs);
+                                    fs.Position = (h + (i * 2)) * 4;
+                                    EndianUpd.Write(EndianConv1);
+                                }
+                                h = h + 0x1E;
                             }
 
                             progress.Report((double)h * 4 / f.Length);
