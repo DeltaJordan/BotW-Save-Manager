@@ -19,12 +19,21 @@ namespace BOTW_SaveConv
         "Play", "Oasi", "Cele", "Wolf", "Gata", "Ston", "Kaka", "Soji", "Hyru", "Powe",
         "Lana", "Hate", "Akka", "Yash", "Dung", "BeeH", "Boar", "Boko", "Brig", "DgnO" };
 
-        private static void Main(string[] args)
+        private static List<string> Hash = new List<string>
+        {"7B74E117", "17E1747B", "D913B769", "69B713D9", "B666D246", "46D266B6", "021A6FF2",
+         "F26F1A02", "FF74960F", "0F9674FF", "8932285F", "5F283289", "3B0A289B", "9B280A3B",
+         "2F95768F", "8F76952F", "9C6CFD3F", "3FFD6C9C", "BBAC416B", "6B41ACBB", "CCAB71FD",
+         "FD71ABCC", "CBC6B5E4", "E4B5C6CB", "2CADB0E7", "E7B0AD2C", "A6EB3EF4", "F43EEBA6",
+         "21D4CFFA", "FACFD421", "22A510D1", "D110A522", "98D10D53", "530DD198", "55A22047",
+         "4720A255", "E5A63A33", "333AA6E5", "BEC65061", "6150C6BE", "BC118370", "708311BC",
+         "0E9D0E75", "750E9D0E" };
+
+        private static void Main(string[] args) // hacky code, sorry if you read this but it does the job, feel free to improve it :)
         {
             if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "option.sav"))
             {
                 Console.WriteLine("BOTW_SaveConv" + Environment.NewLine);
-                Console.WriteLine("This tool is still in beta and might not be perfect yet, so please make a backup of your save before using it." + Environment.NewLine);
+                Console.WriteLine("Make sure you made a backup of your save files in case the conversion fail." + Environment.NewLine);
                 Console.WriteLine("Press Y to continue, press any other key to abort.");
                 if (Console.ReadKey().Key != ConsoleKey.Y)
                     Environment.Exit(0);
@@ -62,7 +71,7 @@ namespace BOTW_SaveConv
                             br.BaseStream.Position = h * 4;
                             byte[] EndianConv = br.ReadBytes(Convert.ToInt32(4));
 
-                            if (ByteArrayToString(EndianConv) == "7B74E117" || ByteArrayToString(EndianConv) == "17E1747B" || ByteArrayToString(EndianConv) == "D913B769" || ByteArrayToString(EndianConv) == "69B713D9" || ByteArrayToString(EndianConv) == "B666D246" || ByteArrayToString(EndianConv) == "46D266B6" || ByteArrayToString(EndianConv) == "021A6FF2" || ByteArrayToString(EndianConv) == "F26F1A02") // skip misc string
+                            if (Hash.Contains(ByteArrayToString(EndianConv))) // skip strings
                             {
                                 Array.Reverse(EndianConv);
 
@@ -77,7 +86,7 @@ namespace BOTW_SaveConv
                                 Skip = false;
                             }
 
-                            if (CheckString(EndianConv) == false && Skip == false) // skip item string
+                            if (CheckString(EndianConv) == false && Skip == false) // make sure we don't convert strings
                             {
                                 Array.Reverse(EndianConv);
 
@@ -91,13 +100,13 @@ namespace BOTW_SaveConv
                                 for (int i = 0; i < 16; i++)
                                 {
                                     br.BaseStream.Position = (h + (i * 2)) * 4;
-                                    byte[] EndianConv1 = br.ReadBytes(Convert.ToInt32(4));
+                                    byte[] EndianHash = br.ReadBytes(Convert.ToInt32(4));
 
-                                    Array.Reverse(EndianConv1);
+                                    Array.Reverse(EndianHash);
 
                                     BinaryWriter EndianUpd = new BinaryWriter(fs);
                                     fs.Position = (h + (i * 2)) * 4;
-                                    EndianUpd.Write(EndianConv1);
+                                    EndianUpd.Write(EndianHash);
                                 }
                                 h = h + 0x1E;
                             }
