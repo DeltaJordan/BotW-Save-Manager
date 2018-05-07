@@ -15,10 +15,44 @@ namespace BotWSaveManager.Conversion
 
         public SaveType SaveConsoleType;
         public string FileLocation;
+        public string GameVersion;
 
         private bool skip;
 
-        private static List<string> Items = new List<string>
+        private static List<int> filesizes = new List<int>
+        {
+            896976,
+            897160,
+            897112,
+            907824,
+            1020648,
+            1027208,
+            1027208
+        };
+
+        private static List<int> headers = new List<int>
+        {
+            0x24e2,
+            0x24EE,
+            0x2588,
+            0x29c0,
+            0x3ef8,
+            0x471a,
+            0x471b
+        };
+
+        private static List<string> versionList = new List<string>
+        {
+            "v1.0",
+            "v1.1",
+            "v1.2",
+            "v1.3",
+            "v1.3.3",
+            "v1.4",
+            "v1.5"
+        };
+
+        private static List<string> items = new List<string>
         {
             "Item", "Weap", "Armo", "Fire", "Norm", "IceA", "Elec", "Bomb", "Anci", "Anim",
             "Obj_", "Game", "Dm_N", "Dm_A", "Dm_E", "Dm_P", "FldO", "Gano", "Gian", "Grea",
@@ -28,7 +62,7 @@ namespace BotWSaveManager.Conversion
             "Lana", "Hate", "Akka", "Yash", "Dung", "BeeH", "Boar", "Boko", "Brig", "DgnO"
         };
 
-        private static List<string> Hash = new List<string>
+        private static List<string> hash = new List<string>
         {
             "7B74E117", "17E1747B", "D913B769", "69B713D9", "B666D246", "46D266B6", "021A6FF2",
             "F26F1A02", "FF74960F", "0F9674FF", "8932285F", "5F283289", "3B0A289B", "9B280A3B",
@@ -46,8 +80,29 @@ namespace BotWSaveManager.Conversion
             {
                 FileInfo f = new FileInfo(file);
 
-                byte[] check = br.ReadBytes(Convert.ToInt32(1));
+                // Not a reliable way to determine game version
+                //this.GameVersion = versionList[filesizes.IndexOf((int)f.Length)];
+
+                byte[] check = br.ReadBytes(1);
                 this.SaveConsoleType = ByteArrayToString(check) == "00" ? SaveType.WiiU : SaveType.Switch;
+
+                while (ByteArrayToString(br.ReadBytes(1)) == "00")
+                {
+                }
+
+                br.BaseStream.Position -= 1;
+
+                byte[] backwardsHeader = br.ReadBytes(2);
+
+                try
+                {
+                    this.GameVersion = versionList[headers.IndexOf(BitConverter.ToInt16(backwardsHeader.Reverse().ToArray(), 0))];
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw new UnsupportedSaveException("The save file you selected is not currently supported.");
+                }
             }
 
             this.FileLocation = file;
@@ -65,7 +120,7 @@ namespace BotWSaveManager.Conversion
                     br.BaseStream.Position = h * 4;
                     byte[] endianConv = br.ReadBytes(Convert.ToInt32(4));
 
-                    if (Hash.Contains(ByteArrayToString(endianConv))) // skip strings
+                    if (hash.Contains(ByteArrayToString(endianConv))) // skip strings
                     {
                         Array.Reverse(endianConv);
 
@@ -127,7 +182,7 @@ namespace BotWSaveManager.Conversion
         public static bool CheckString(byte[] toCheck)
         {
             string Object = System.Text.Encoding.UTF8.GetString(toCheck);
-            return Items.Any(Object.Contains);
+            return items.Any(Object.Contains);
         }
     }
 }

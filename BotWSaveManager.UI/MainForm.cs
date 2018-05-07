@@ -38,14 +38,28 @@ namespace BotWSaveManager.UI
                     MessageBox.Show("Please select a valid file before continuing.");
                 }
 
-                this.SelectedSave = new Save(dia.FileName);
+                try
+                {
+                    this.SelectedSave = new Save(dia.FileName);
+                }
+                catch (UnsupportedSaveException exception)
+                {
+                    MessageBox.Show(exception.Message);
+                    this.btnConvert.Hide();
+                    this.tbSaveLocation.Hide();
+                    this.btnBrowse.Hide();
+                    this.btnSaveToFile.Hide();
+                    this.pbConsole.Image = null;
+                    this.lblConsoleName.Text = "";
+                    return;
+                }
 
                 this.ConvertedSaveBytes = File.ReadAllBytes(this.SelectedSave.FileLocation);
 
                 this.lblFileWarning.Hide();
 
                 this.pbConsole.Image = this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? Resources.nintendo_switch_logo : Resources.wii_u_logo;
-                this.lblConsoleName.Text = this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? "BotW - Switch" : "BotW - Wii U";
+                this.lblConsoleName.Text = (this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? $"BotW {this.SelectedSave.GameVersion} - Switch" : $"BotW {this.SelectedSave.GameVersion} - Wii U");
 
                 this.btnConvert.Show();
                 this.tbSaveLocation.Show();
@@ -60,7 +74,7 @@ namespace BotWSaveManager.UI
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            new About().Show();
         }
 
         private void BtnConvert_Click(object sender, EventArgs e)
@@ -80,12 +94,12 @@ namespace BotWSaveManager.UI
                 return;
             }
 
-            MessageBox.Show("Save converted successfully! Either continue with the save editor or just save the file and copy it to your console.");
+            MessageBox.Show("Save converted successfully! Either continue with the save editor (not supported currently) or just save the file and copy it to your Nintendo console.");
 
             this.Enabled = true;
 
             this.pbConsole.Image = this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? Resources.nintendo_switch_logo : Resources.wii_u_logo;
-            this.lblConsoleName.Text = this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? "BotW - Switch" : "BotW - Wii U";
+            this.lblConsoleName.Text = this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? $"BotW {this.SelectedSave.GameVersion} - Switch" : $"BotW {this.SelectedSave.GameVersion} - Wii U";
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -114,7 +128,7 @@ namespace BotWSaveManager.UI
                 MessageBox.Show("Error writing save file to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", exception.Message);
             }
 
-            MessageBox.Show("File saved successfully!");
+            MessageBox.Show($"File saved successfully! Please note that you are required to use {this.SelectedSave.GameVersion} of BotW on the target system with (probably) the same DLC for this save file to work.");
         }
     }
 }
