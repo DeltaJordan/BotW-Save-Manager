@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2027
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotWSaveManager.Conversion", "BotWSaveManager.Conversion\BotWSaveManager.Conversion.csproj", "{760B1117-BC1D-4C8C-A392-4136C94D3BC5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotWSaveManager.UI", "BotWSaveManager.UI\BotWSaveManager.UI.csproj", "{4BFC357A-B4C2-4032-8673-1F5C100C7A75}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{760B1117-BC1D-4C8C-A392-4136C94D3BC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{760B1117-BC1D-4C8C-A392-4136C94D3BC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{760B1117-BC1D-4C8C-A392-4136C94D3BC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{760B1117-BC1D-4C8C-A392-4136C94D3BC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BFC357A-B4C2-4032-8673-1F5C100C7A75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BFC357A-B4C2-4032-8673-1F5C100C7A75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BFC357A-B4C2-4032-8673-1F5C100C7A75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BFC357A-B4C2-4032-8673-1F5C100C7A75}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BDBA405A-AA46-44C4-A8AC-362F5402ECFE}
+	EndGlobalSection
+EndGlobal
