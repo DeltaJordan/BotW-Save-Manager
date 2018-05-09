@@ -14,7 +14,8 @@ namespace BotWSaveManager.Conversion
         }
 
         public SaveType SaveConsoleType;
-        public string FileLocation;
+        public string OptionFileLocation;
+        public string SaveFolder;
         public string GameVersion;
 
         private bool skip;
@@ -105,72 +106,80 @@ namespace BotWSaveManager.Conversion
                 }
             }
 
-            this.FileLocation = file;
+            this.OptionFileLocation = file;
+            this.SaveFolder = Directory.GetParent(this.OptionFileLocation).FullName;
         }
 
-        public byte[] ConvertSave(string outputLocation = null)
+        public Dictionary<string, byte[]> ConvertSave(string outputLocation = null)
         {
-            byte[] currentFileBytes = File.ReadAllBytes(this.FileLocation);
+            Dictionary<string, byte[]> returnBytesDict = new Dictionary<string, byte[]>();
 
-            using (MemoryStream ms = new MemoryStream(currentFileBytes))
-            using (BinaryReader br = new BinaryReader(ms))
+            foreach (string file in Directory.GetFiles(this.SaveFolder, "*.sav", SearchOption.AllDirectories))
             {
-                for (int h = 0; h < currentFileBytes.Length / 4; h++)
+                byte[] currentFileBytes = File.ReadAllBytes(file);
+
+                using (MemoryStream ms = new MemoryStream(currentFileBytes))
+                using (BinaryReader br = new BinaryReader(ms))
                 {
-                    br.BaseStream.Position = h * 4;
-                    byte[] endianConv = br.ReadBytes(Convert.ToInt32(4));
-
-                    if (hash.Contains(ByteArrayToString(endianConv))) // skip strings
+                    for (int h = 0; h < currentFileBytes.Length / 4; h++)
                     {
-                        Array.Reverse(endianConv);
+                        br.BaseStream.Position = h * 4;
+                        byte[] endianConv = br.ReadBytes(Convert.ToInt32(4));
 
-                        BinaryWriter endianUpd = new BinaryWriter(ms);
-                        ms.Position = h * 4;
-                        endianUpd.Write(endianConv);
-                        h++;
-                        this.skip = true;
-                    }
-                    else
-                    {
-                        this.skip = false;
-                    }
-
-                    if (CheckString(endianConv) == false && this.skip == false) // make sure we don't convert strings
-                    {
-                        Array.Reverse(endianConv);
-
-                        BinaryWriter endianUpd = new BinaryWriter(ms);
-                        ms.Position = h * 4;
-                        endianUpd.Write(endianConv);
-                    }
-                    else if (this.skip == false)
-                    {
-                        h++;
-                        for (int i = 0; i < 16; i++)
+                        if (hash.Contains(ByteArrayToString(endianConv))) // skip strings
                         {
-                            br.BaseStream.Position = (h + (i * 2)) * 4;
-                            byte[] endianHash = br.ReadBytes(Convert.ToInt32(4));
-
-                            Array.Reverse(endianHash);
+                            Array.Reverse(endianConv);
 
                             BinaryWriter endianUpd = new BinaryWriter(ms);
-                            ms.Position = (h + (i * 2)) * 4;
-                            endianUpd.Write(endianHash);
+                            ms.Position = h * 4;
+                            endianUpd.Write(endianConv);
+                            h++;
+                            this.skip = true;
+                        }
+                        else
+                        {
+                            this.skip = false;
                         }
 
-                        h = h + 0x1E;
+                        if (CheckString(endianConv) == false && this.skip == false) // make sure we don't convert strings
+                        {
+                            Array.Reverse(endianConv);
+
+                            BinaryWriter endianUpd = new BinaryWriter(ms);
+                            ms.Position = h * 4;
+                            endianUpd.Write(endianConv);
+                        }
+                        else if (this.skip == false)
+                        {
+                            h++;
+                            for (int i = 0; i < 16; i++)
+                            {
+                                br.BaseStream.Position = (h + (i * 2)) * 4;
+                                byte[] endianHash = br.ReadBytes(Convert.ToInt32(4));
+
+                                Array.Reverse(endianHash);
+
+                                BinaryWriter endianUpd = new BinaryWriter(ms);
+                                ms.Position = (h + (i * 2)) * 4;
+                                endianUpd.Write(endianHash);
+                            }
+
+                            h = h + 0x1E;
+                        }
                     }
+
+                    if (outputLocation != null)
+                    {
+                        File.WriteAllBytes(outputLocation, ms.ToArray());
+                    }
+
+                    this.SaveConsoleType = this.SaveConsoleType == SaveType.Switch ? SaveType.WiiU : SaveType.Switch;
+
+                    returnBytesDict.Add(file, ms.ToArray());
                 }
-
-                if (outputLocation != null)
-                {
-                    File.WriteAllBytes(outputLocation, ms.ToArray());
-                }
-
-                this.SaveConsoleType = this.SaveConsoleType == SaveType.Switch ? SaveType.WiiU : SaveType.Switch;
-
-                return ms.ToArray();
             }
+
+            return returnBytesDict;
         }
 
         public static string ByteArrayToString(byte[] byteA)

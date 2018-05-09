@@ -1,23 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using BotWSaveManager.Conversion;
+using BotWSaveManager.Conversion.IO;
 
 namespace BotWSaveManager.Command
 {
-    class Program
+    public static class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.WriteLine("Breath of the Wild Save Manager by Jordan Zeotni, fork of https://github.com/WemI0/BOTW_SaveConv");
-            Console.Write("Enter the path of the save file or press enter if the file is in the same folder as this application (option.sav): ");
-            string fileLocation = Console.ReadLine();
+            Console.Write("Enter the path of the option.sav file in your save folder or press enter if the file is in the same folder as this application (option.sav): ");
+            string fileLocation = Console.ReadLine()?.Trim('"');
 
             if (string.IsNullOrWhiteSpace(fileLocation))
             {
                 if (Directory.GetFiles(Globals.AppPath, "*.sav").First() == null)
                 {
-                    Console.WriteLine("There are no files with the extension *.sav in this folder. Either place one in the root directory or enter the save file's path.");
+                    Console.WriteLine("There are no files with the extension *.sav in this folder. Either place this applicaton in the same folder as option.sav or enter the save file's path.");
                     Main(args);
                     return;
                 }
@@ -26,7 +28,7 @@ namespace BotWSaveManager.Command
             }
             else if (!File.Exists(fileLocation))
             {
-                Console.WriteLine("This file does not exist at this path. Either place one in the root directory or enter the save file's path.");
+                Console.WriteLine("This file does not exist at this path. Either place one in the root directory or enter the path of option.sav.");
                 Main(args);
                 return;
             }
@@ -56,18 +58,38 @@ namespace BotWSaveManager.Command
                 return;
             }
 
-            byte[] convertSaveBytes = selectedSave.ConvertSave();
+            Dictionary<string, byte[]> convertSaveBytes = selectedSave.ConvertSave();
 
-            Console.Write("Enter a path to save the file as, or press enter to save as \"option.sav\" in the application folder: ");
-            string saveLocation = Console.ReadLine();
+            Console.Write("Enter a folder to write the save to, or press enter to overwrite the existing save with the converted version: ");
+            string saveLocation = Console.ReadLine()?.Trim('"');
 
             try
             {
-                File.WriteAllBytes(string.IsNullOrWhiteSpace(saveLocation) ? Path.Combine(Globals.AppPath, "option.sav") : saveLocation, convertSaveBytes);
+                if (string.IsNullOrWhiteSpace(saveLocation))
+                {
+                    foreach (KeyValuePair<string, byte[]> convertSaveByte in convertSaveBytes)
+                    {
+                        File.WriteAllBytes(convertSaveByte.Key, convertSaveByte.Value);
+                    }
+                }
+                else
+                {
+                    CopyDir.Copy(selectedSave.SaveFolder, saveLocation);
+
+                    foreach (KeyValuePair<string, byte[]> convertSaveByte in convertSaveBytes)
+                    {
+                        string saveTo = Directory.GetFiles(saveLocation, "*.sav", SearchOption.AllDirectories)
+                            .First(e => Path.GetFileName(e) == "option.sav" ||
+                                Path.GetFileName(e) == Path.GetFileName(convertSaveByte.Key) && 
+                                Directory.GetParent(e).Name == Directory.GetParent(convertSaveByte.Key).Name);
+
+                        File.WriteAllBytes(saveTo, convertSaveByte.Value);
+                    }
+                }
             }
             catch (Exception e)
             {
-                Console.WriteLine("The file cannot be saved at this path. If you think this is an error report the following stacktrace:");
+                Console.WriteLine("The files cannot be saved at this path. If you think this is an error report the following stacktrace:");
                 Console.WriteLine(e);
                 Console.WriteLine();
                 Console.WriteLine();
@@ -75,7 +97,7 @@ namespace BotWSaveManager.Command
                 return;
             }
 
-            Console.WriteLine($"File saved successfully! Please note that you are required to use {selectedSave.GameVersion} of BotW on the target system with (probably) the same DLC for this save file to work. This application only supports conversion at the moment, stay tuned for more features.\nPress any key to close...");
+            Console.WriteLine($"Files saved successfully! Please note that you are required to use {selectedSave.GameVersion} of BotW on the target system with (probably) the same DLC for this save file to work. This application only supports conversion at the moment, stay tuned for more features.\nPress any key to close...");
             Console.ReadKey(true);
         }
     }

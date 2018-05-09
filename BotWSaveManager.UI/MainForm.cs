@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BotWSaveManager.Conversion;
+using BotWSaveManager.Conversion.IO;
 using BotWSaveManager.UI.Properties;
 
 namespace BotWSaveManager.UI
@@ -17,7 +18,7 @@ namespace BotWSaveManager.UI
     public partial class MainForm : Form
     {
         public Save SelectedSave;
-        public byte[] ConvertedSaveBytes;
+        public Dictionary<string, byte[]> SaveFilesDictionary;
 
         public MainForm()
         {
@@ -28,7 +29,7 @@ namespace BotWSaveManager.UI
         {
             OpenFileDialog dia = new OpenFileDialog
             {
-                Filter = "Save files (*.sav)|*.sav|All files (*.*)|*.*"
+                Filter = "Option save file (option.sav)|option.sav|All files (*.*)|*.*"
             };
 
             if (dia.ShowDialog() == DialogResult.OK)
@@ -54,7 +55,12 @@ namespace BotWSaveManager.UI
                     return;
                 }
 
-                this.ConvertedSaveBytes = File.ReadAllBytes(this.SelectedSave.FileLocation);
+                this.SaveFilesDictionary = new Dictionary<string, byte[]>();
+
+                foreach (string file in Directory.GetFiles(this.SelectedSave.SaveFolder, "*.sav", SearchOption.AllDirectories))
+                {
+                    this.SaveFilesDictionary.Add(file, File.ReadAllBytes(file));
+                }
 
                 this.lblFileWarning.Hide();
 
@@ -68,7 +74,7 @@ namespace BotWSaveManager.UI
             }
             else
             {
-                MessageBox.Show("Please select a file before continuing.");
+                MessageBox.Show("Please select option.sav in your save folder before continuing.");
             }
         }
 
@@ -82,7 +88,7 @@ namespace BotWSaveManager.UI
             this.Enabled = false;
             try
             {
-                this.ConvertedSaveBytes = this.SelectedSave.ConvertSave();
+                this.SaveFilesDictionary = this.SelectedSave.ConvertSave();
             }
             catch (Exception exception)
             {
@@ -104,31 +110,38 @@ namespace BotWSaveManager.UI
 
         private void BtnBrowse_Click(object sender, EventArgs e)
         {
-            SaveFileDialog dia = new SaveFileDialog
-            {
-                Filter = "Save file (*.sav)|*.sav"
-            };
+            FolderBrowserDialog dia = new FolderBrowserDialog();
 
             if (dia.ShowDialog() == DialogResult.OK)
             {
-                this.tbSaveLocation.Text = dia.FileName;
+                this.tbSaveLocation.Text = dia.SelectedPath;
             }
         }
 
-        private void BtnSaveToFile_Click(object sender, EventArgs e)
+        private void BtnSaveToFile_Click(object sender, EventArgs eventArgs)
         {
             try
             {
-                File.WriteAllBytes(this.tbSaveLocation.Text, this.ConvertedSaveBytes);
+                CopyDir.Copy(this.SelectedSave.SaveFolder, this.tbSaveLocation.Text);
+
+                foreach (KeyValuePair<string, byte[]> convertSaveByte in this.SaveFilesDictionary)
+                {
+                    string saveTo = Directory.GetFiles(this.tbSaveLocation.Text, "*.sav", SearchOption.AllDirectories)
+                        .First(e => Path.GetFileName(e) == "option.sav" ||
+                                    Path.GetFileName(e) == Path.GetFileName(convertSaveByte.Key) &&
+                                    Directory.GetParent(e).Name == Directory.GetParent(convertSaveByte.Key).Name);
+
+                    File.WriteAllBytes(saveTo, convertSaveByte.Value);
+                }
             }
             catch (Exception exception)
             {
                 File.WriteAllText(Path.Combine(Application.StartupPath, $"error-{DateTime.Now.ToString(CultureInfo.CurrentCulture)}.log"), exception.ToString());
 
-                MessageBox.Show("Error writing save file to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", exception.Message);
+                MessageBox.Show("Error writing save files to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", exception.Message);
             }
 
-            MessageBox.Show($"File saved successfully! Please note that you are required to use {this.SelectedSave.GameVersion} of BotW on the target system with (probably) the same DLC for this save file to work.");
+            MessageBox.Show($"Files written successfully! Please note that you are required to use {this.SelectedSave.GameVersion} of BotW on the target system with (probably) the same DLC for this save file to work.");
         }
     }
 }
