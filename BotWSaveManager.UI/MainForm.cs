@@ -45,14 +45,26 @@ namespace BotWSaveManager.UI
                 }
                 catch (UnsupportedSaveException exception)
                 {
-                    MessageBox.Show(exception.Message);
-                    this.btnConvert.Hide();
-                    this.tbSaveLocation.Hide();
-                    this.btnBrowse.Hide();
-                    this.btnSaveToFile.Hide();
-                    this.pbConsole.Image = null;
-                    this.lblConsoleName.Text = "";
-                    return;
+                    if (exception.IsSwitch && MessageBox.Show("Cannot find switch version from save. If you would like to attempt to use this file anyways, select Yes.", "Possibly unsupported save.", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        this.SelectedSave = new Save(dia.FileName, true);
+                    }
+                    else
+                    {
+                        MessageBox.Show(exception.Message);
+                        this.btnConvert.Hide();
+                        this.tbSaveLocation.Hide();
+                        this.btnBrowse.Hide();
+                        this.btnSaveToFile.Hide();
+                        this.pbConsole.Image = null;
+                        this.lblConsoleName.Text = "";
+                        return;
+                    }
+                }
+
+                if (this.SelectedSave.SaveConsoleType == Save.SaveType.Switch && this.SelectedSave.GameVersion != "Unknown version")
+                {
+                    MessageBox.Show("Please note that Switch versioning is WIP until more saves from varying game versions is available.");
                 }
 
                 this.SaveFilesDictionary = new Dictionary<string, byte[]>();
@@ -100,7 +112,7 @@ namespace BotWSaveManager.UI
                 return;
             }
 
-            MessageBox.Show("Save converted successfully! Either continue with the save editor (not supported currently) or just save the file and copy it to your Nintendo console.");
+            MessageBox.Show("Save converted successfully! Just save the file and copy it to your Nintendo console.");
 
             this.Enabled = true;
 

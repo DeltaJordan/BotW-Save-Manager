@@ -41,12 +41,41 @@ namespace BotWSaveManager.Command
             }
             catch (UnsupportedSaveException e)
             {
-                Console.WriteLine("This save is not supported. If you think this is an error report the following stacktrace:");
-                Console.WriteLine(e);
+                if (e.IsSwitch)
+                {
+                    Console.Write("Cannot find switch version from save. If you would like to attempt to use this file anyways, enter \"Y\": ");
+
+                    if (Console.ReadKey().Key == ConsoleKey.Y)
+                    {
+                        selectedSave = new Save(fileLocation, true);
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.WriteLine("This save is not supported. If you think this is an error report the following stacktrace:");
+                        Console.WriteLine(e);
+                        Console.WriteLine();
+                        Console.WriteLine();
+                        Main(args);
+                        return;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("This save is not supported. If you think this is an error report the following stacktrace:");
+                    Console.WriteLine(e);
+                    Console.WriteLine();
+                    Console.WriteLine();
+                    Main(args);
+                    return;
+                }
+            }
+
+            if (selectedSave.SaveConsoleType == Save.SaveType.Switch && selectedSave.GameVersion != "Unknown version")
+            {
+                Console.WriteLine("Please note that Switch versioning is WIP until more saves from varying game versions is available.");
                 Console.WriteLine();
-                Console.WriteLine();
-                Main(args);
-                return;
             }
 
             Console.WriteLine(selectedSave.SaveConsoleType == Save.SaveType.Switch ? $"BotW {selectedSave.GameVersion} - Switch" : $"BotW {selectedSave.GameVersion} - Wii U");
@@ -97,7 +126,7 @@ namespace BotWSaveManager.Command
                 return;
             }
 
-            Console.WriteLine($"Files saved successfully! Please note that you are required to use {selectedSave.GameVersion} of BotW on the target system with (probably) the same DLC for this save file to work. This application only supports conversion at the moment, stay tuned for more features.\nPress any key to close...");
+            Console.WriteLine($"Files saved successfully! Please note that you are required to use {selectedSave.GameVersion} of BotW on the target system with (probably) the same DLC for this save file to work. \nPress any key to close...");
             Console.ReadKey(true);
         }
     }

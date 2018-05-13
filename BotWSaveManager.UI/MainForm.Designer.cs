@@ -34,14 +34,13 @@
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabConvert = new System.Windows.Forms.TabPage();
-            this.lblFileWarning = new System.Windows.Forms.Label();
             this.btnSaveToFile = new System.Windows.Forms.Button();
             this.btnBrowse = new System.Windows.Forms.Button();
             this.tbSaveLocation = new System.Windows.Forms.TextBox();
             this.btnConvert = new System.Windows.Forms.Button();
             this.lblConsoleName = new System.Windows.Forms.Label();
             this.pbConsole = new System.Windows.Forms.PictureBox();
-            this.tabEditor = new System.Windows.Forms.TabPage();
+            this.lblFileWarning = new System.Windows.Forms.Label();
             this.menuStripFile.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabConvert.SuspendLayout();
@@ -84,7 +83,6 @@
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabConvert);
-            this.tabControl1.Controls.Add(this.tabEditor);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 24);
             this.tabControl1.Name = "tabControl1";
@@ -107,16 +105,6 @@
             this.tabConvert.TabIndex = 0;
             this.tabConvert.Text = "Conversion";
             this.tabConvert.UseVisualStyleBackColor = true;
-            // 
-            // lblFileWarning
-            // 
-            this.lblFileWarning.AutoSize = true;
-            this.lblFileWarning.BackColor = System.Drawing.Color.White;
-            this.lblFileWarning.Location = new System.Drawing.Point(328, 222);
-            this.lblFileWarning.Name = "lblFileWarning";
-            this.lblFileWarning.Size = new System.Drawing.Size(238, 13);
-            this.lblFileWarning.TabIndex = 0;
-            this.lblFileWarning.Text = "Please select a save file from the context menu...";
             // 
             // btnSaveToFile
             // 
@@ -176,15 +164,15 @@
             this.pbConsole.TabIndex = 1;
             this.pbConsole.TabStop = false;
             // 
-            // tabEditor
+            // lblFileWarning
             // 
-            this.tabEditor.Location = new System.Drawing.Point(4, 22);
-            this.tabEditor.Name = "tabEditor";
-            this.tabEditor.Padding = new System.Windows.Forms.Padding(3);
-            this.tabEditor.Size = new System.Drawing.Size(1026, 472);
-            this.tabEditor.TabIndex = 1;
-            this.tabEditor.Text = "Editor";
-            this.tabEditor.UseVisualStyleBackColor = true;
+            this.lblFileWarning.AutoSize = true;
+            this.lblFileWarning.BackColor = System.Drawing.Color.White;
+            this.lblFileWarning.Location = new System.Drawing.Point(328, 222);
+            this.lblFileWarning.Name = "lblFileWarning";
+            this.lblFileWarning.Size = new System.Drawing.Size(238, 13);
+            this.lblFileWarning.TabIndex = 0;
+            this.lblFileWarning.Text = "Please select a save file from the context menu...";
             // 
             // MainForm
             // 
@@ -217,7 +205,6 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabConvert;
         private System.Windows.Forms.Label lblFileWarning;
-        private System.Windows.Forms.TabPage tabEditor;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.Label lblConsoleName;
         private System.Windows.Forms.PictureBox pbConsole;

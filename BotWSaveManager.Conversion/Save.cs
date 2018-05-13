@@ -74,7 +74,7 @@ namespace BotWSaveManager.Conversion
             "0E9D0E75", "750E9D0E"
         };
 
-        public Save(string file)
+        public Save(string file, bool skipSwitchVersionCheck = false)
         {
             using (FileStream fs = new FileStream(file, FileMode.Open))
             using (BinaryReader br = new BinaryReader(fs))
@@ -93,16 +93,43 @@ namespace BotWSaveManager.Conversion
 
                 br.BaseStream.Position -= 1;
 
-                byte[] backwardsHeader = br.ReadBytes(2);
+                if (this.SaveConsoleType == SaveType.WiiU)
+                {
+                    byte[] backwardsHeader = br.ReadBytes(2);
 
-                try
-                {
-                    this.GameVersion = versionList[headers.IndexOf(BitConverter.ToInt16(backwardsHeader.Reverse().ToArray(), 0))];
+                    try
+                    {
+                        this.GameVersion = versionList[headers.IndexOf(BitConverter.ToInt16(backwardsHeader.Reverse().ToArray(), 0))];
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw new UnsupportedSaveException("The save file you selected is not currently supported.");
+                    }
                 }
-                catch (Exception e)
+                else
                 {
-                    Console.WriteLine(e);
-                    throw new UnsupportedSaveException("The save file you selected is not currently supported.");
+                    if (skipSwitchVersionCheck)
+                    {
+                        this.GameVersion = "Unknown version";
+                    }
+                    else
+                    {
+                        try
+                        {
+                            if (BitConverter.ToInt16(br.ReadBytes(2), 0) == 0x2a46)
+                            {
+                                this.GameVersion = versionList[headers.IndexOf(0x29c0)]; //v1.3.0 switch?
+                            }
+
+                            this.GameVersion = versionList[headers.IndexOf(BitConverter.ToInt16(br.ReadBytes(2), 0))];
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw new UnsupportedSaveException("The save file you selected is not currently supported.") {IsSwitch = true};
+                        }
+                    }
                 }
             }
 
