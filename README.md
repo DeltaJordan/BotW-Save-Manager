@@ -2,7 +2,7 @@
 
 **Note: Make sure both versions of BotW have the same update version**
 
-BotW Save Manager is a fork of https://github.com/WemI0/BOTW_SaveConv that at the moment can convert Switch <-> Wii U BotW save files. It currently has been written with .Net Framework for Windows with UI, and .Net Core (command-line only) for cross-compatibility. It is also planned to have support for save editing, with most of the code based on https://github.com/marcrobledo/savegame-editors/tree/master/zelda-botw.
+BotW Save Manager is a fork of https://github.com/WemI0/BOTW_SaveConv that at the moment can convert Switch <-> Wii U BotW save files. It currently has been written with .Net Framework for Windows with UI, and .Net Core (command-line only) for cross-compatibility. ~~It is also planned to have support for save editing, with most of the code based on https://github.com/marcrobledo/savegame-editors/tree/master/zelda-botw. .~~ You can go edit Switch saves from here: https://www.marcrobledo.com/savegame-editors/zelda-botw/
 
 ## Usage:
 
