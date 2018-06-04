@@ -14,9 +14,9 @@ namespace BotWSaveManager.Conversion
         }
 
         public SaveType SaveConsoleType;
-        public string OptionFileLocation;
         public string SaveFolder;
-        public string GameVersion;
+
+        public List<string> SaveVersionList = new List<string>();
 
         private bool skip;
 
@@ -74,44 +74,49 @@ namespace BotWSaveManager.Conversion
             "0E9D0E75", "750E9D0E"
         };
 
-        public Save(string file, bool skipSwitchVersionCheck = false)
+        public Save(string folder, bool skipSwitchVersionCheck = false)
         {
-            using (FileStream fs = new FileStream(file, FileMode.Open))
+            if (!File.Exists(Path.Combine(folder, "option.sav")))
+            {
+                throw new ArgumentException("The selected folder is not a valid Breath of the Wild save folder. " +
+                                            "Please select a folder containing valid save data, including option.sav " +
+                                            "in the root of the folder.");
+            }
+
+            using (FileStream fs = new FileStream(Path.Combine(folder, "option.sav"), FileMode.Open))
             using (BinaryReader br = new BinaryReader(fs))
             {
-                FileInfo f = new FileInfo(file);
-
-                // Not a reliable way to determine game version
-                //this.GameVersion = versionList[filesizes.IndexOf((int)f.Length)];
-
                 byte[] check = br.ReadBytes(1);
                 this.SaveConsoleType = ByteArrayToString(check) == "00" ? SaveType.WiiU : SaveType.Switch;
+            }
 
-                while (ByteArrayToString(br.ReadBytes(1)) == "00")
+            foreach (string file in Directory.EnumerateFiles(folder, "game_data.sav", SearchOption.AllDirectories))
+            {
+                using (FileStream fs = new FileStream(file, FileMode.Open))
+                using (BinaryReader br = new BinaryReader(fs))
                 {
-                }
+                    // Not a reliable way to determine game version
+                    //this.GameVersion = versionList[filesizes.IndexOf((int)f.Length)];
 
-                br.BaseStream.Position -= 1;
+                    if (this.SaveConsoleType == SaveType.WiiU)
+                    {
+                        while (ByteArrayToString(br.ReadBytes(1)) == "00")
+                        {
+                        }
 
-                if (this.SaveConsoleType == SaveType.WiiU)
-                {
-                    byte[] backwardsHeader = br.ReadBytes(2);
+                        br.BaseStream.Position -= 1;
 
-                    try
-                    {
-                        this.GameVersion = versionList[headers.IndexOf(BitConverter.ToInt16(backwardsHeader.Reverse().ToArray(), 0))];
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw new UnsupportedSaveException("The save file you selected is not currently supported.");
-                    }
-                }
-                else
-                {
-                    if (skipSwitchVersionCheck)
-                    {
-                        this.GameVersion = "Unknown version";
+                        byte[] backwardsHeader = br.ReadBytes(2);
+
+                        try
+                        {
+                            this.SaveVersionList.Add(versionList[headers.IndexOf(BitConverter.ToInt16(backwardsHeader.Reverse().ToArray(), 0))]);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e);
+                            throw new UnsupportedSaveException("The version of a numbered save folder you selected cannot be retrieved.");
+                        }
                     }
                     else
                     {
@@ -119,22 +124,35 @@ namespace BotWSaveManager.Conversion
                         {
                             if (BitConverter.ToInt16(br.ReadBytes(2), 0) == 0x2a46)
                             {
-                                this.GameVersion = versionList[headers.IndexOf(0x29c0)]; //v1.3.0 switch?
+                                this.SaveVersionList.Add(versionList[headers.IndexOf(0x29c0)]); //v1.3.0 switch?
+                                return;
                             }
 
-                            this.GameVersion = versionList[headers.IndexOf(BitConverter.ToInt16(br.ReadBytes(2), 0))];
+                            br.BaseStream.Position = 0;
+
+                            if (BitConverter.ToInt16(br.ReadBytes(2), 0) == 0x3ef9) 
+                            {
+                                this.SaveVersionList.Add(versionList[headers.IndexOf(0x3ef8)]); //v1.3.3 switch?
+                                return;
+                            }
+
+                            br.BaseStream.Position = 0;
+
+                            this.SaveVersionList.Add(versionList[headers.IndexOf(BitConverter.ToInt16(br.ReadBytes(2), 0))]);
                         }
                         catch (Exception e)
                         {
                             Console.WriteLine(e);
-                            throw new UnsupportedSaveException("The save file you selected is not currently supported.") {IsSwitch = true};
+                            if (!skipSwitchVersionCheck)
+                            {
+                                throw new UnsupportedSaveException("The version of a numbered save folder you selected cannot be retrieved.") {IsSwitch = true};
+                            }
                         }
                     }
                 }
             }
 
-            this.OptionFileLocation = file;
-            this.SaveFolder = Directory.GetParent(this.OptionFileLocation).FullName;
+            this.SaveFolder = folder;
         }
 
         public Dictionary<string, byte[]> ConvertSave(string outputLocation = null)
@@ -148,10 +166,10 @@ namespace BotWSaveManager.Conversion
                 using (MemoryStream ms = new MemoryStream(currentFileBytes))
                 using (BinaryReader br = new BinaryReader(ms))
                 {
-                    for (int h = 0; h < currentFileBytes.Length / 4; h++)
+                    for (int h = 0; h < ms.Length / 4; h++)
                     {
                         br.BaseStream.Position = h * 4;
-                        byte[] endianConv = br.ReadBytes(Convert.ToInt32(4));
+                        byte[] endianConv = br.ReadBytes(4);
 
                         if (hash.Contains(ByteArrayToString(endianConv))) // skip strings
                         {
@@ -182,7 +200,7 @@ namespace BotWSaveManager.Conversion
                             for (int i = 0; i < 16; i++)
                             {
                                 br.BaseStream.Position = (h + (i * 2)) * 4;
-                                byte[] endianHash = br.ReadBytes(Convert.ToInt32(4));
+                                byte[] endianHash = br.ReadBytes(4);
 
                                 Array.Reverse(endianHash);
 
@@ -200,11 +218,11 @@ namespace BotWSaveManager.Conversion
                         File.WriteAllBytes(outputLocation, ms.ToArray());
                     }
 
-                    this.SaveConsoleType = this.SaveConsoleType == SaveType.Switch ? SaveType.WiiU : SaveType.Switch;
-
                     returnBytesDict.Add(file, ms.ToArray());
                 }
             }
+            
+            this.SaveConsoleType = this.SaveConsoleType == SaveType.Switch ? SaveType.WiiU : SaveType.Switch;
 
             return returnBytesDict;
         }

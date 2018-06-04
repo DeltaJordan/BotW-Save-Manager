@@ -27,27 +27,19 @@ namespace BotWSaveManager.UI
 
         private void OpenSaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            OpenFileDialog dia = new OpenFileDialog
-            {
-                Filter = "Option save file (option.sav)|option.sav|All files (*.*)|*.*"
-            };
+            FolderBrowserDialog dia = new FolderBrowserDialog();
 
             if (dia.ShowDialog() == DialogResult.OK)
             {
-                if (!File.Exists(dia.FileName))
-                {
-                    MessageBox.Show("Please select a valid file before continuing.");
-                }
-
                 try
                 {
-                    this.SelectedSave = new Save(dia.FileName);
+                    this.SelectedSave = new Save(dia.SelectedPath);
                 }
                 catch (UnsupportedSaveException exception)
                 {
-                    if (exception.IsSwitch && MessageBox.Show("Cannot find switch version from save. If you would like to attempt to use this file anyways, select Yes.", "Possibly unsupported save.", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    if (exception.IsSwitch && MessageBox.Show("The version of a numbered save folder you selected cannot be retrieved. If you would like to attempt to use this file anyways, select Yes.", "Possibly unsupported save.", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        this.SelectedSave = new Save(dia.FileName, true);
+                        this.SelectedSave = new Save(dia.SelectedPath, true);
                     }
                     else
                     {
@@ -55,18 +47,13 @@ namespace BotWSaveManager.UI
                         this.btnConvert.Hide();
                         this.tbSaveLocation.Hide();
                         this.btnBrowse.Hide();
-                        this.btnSaveToFile.Hide();
+                        this.btnSaveToFiles.Hide();
                         this.pbConsole.Image = null;
                         this.lblConsoleName.Text = "";
                         return;
                     }
                 }
-
-                if (this.SelectedSave.SaveConsoleType == Save.SaveType.Switch && this.SelectedSave.GameVersion != "Unknown version")
-                {
-                    MessageBox.Show("Please note that Switch versioning is WIP until more saves from varying game versions is available.");
-                }
-
+                
                 this.SaveFilesDictionary = new Dictionary<string, byte[]>();
 
                 foreach (string file in Directory.GetFiles(this.SelectedSave.SaveFolder, "*.sav", SearchOption.AllDirectories))
@@ -77,16 +64,22 @@ namespace BotWSaveManager.UI
                 this.lblFileWarning.Hide();
 
                 this.pbConsole.Image = this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? Resources.nintendo_switch_logo : Resources.wii_u_logo;
-                this.lblConsoleName.Text = (this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? $"BotW {this.SelectedSave.GameVersion} - Switch" : $"BotW {this.SelectedSave.GameVersion} - Wii U");
+                this.lblConsoleName.Text = string.Empty;
+
+                for (int index = 0; index < this.SelectedSave.SaveVersionList.Count; index++)
+                {
+                    string s = this.SelectedSave.SaveVersionList[index];
+                    this.lblConsoleName.Text += $"Save {index}: {s}\n";
+                }
 
                 this.btnConvert.Show();
                 this.tbSaveLocation.Show();
                 this.btnBrowse.Show();
-                this.btnSaveToFile.Show();
+                this.btnSaveToFiles.Show();
             }
             else
             {
-                MessageBox.Show("Please select option.sav in your save folder before continuing.");
+                MessageBox.Show("Please select your save folder before continuing.");
             }
         }
 
@@ -112,12 +105,18 @@ namespace BotWSaveManager.UI
                 return;
             }
 
-            MessageBox.Show("Save converted successfully! Just save the file and copy it to your Nintendo console.");
+            MessageBox.Show("Save converted successfully! Just save the folder and copy it to your Nintendo console.");
 
             this.Enabled = true;
 
             this.pbConsole.Image = this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? Resources.nintendo_switch_logo : Resources.wii_u_logo;
-            this.lblConsoleName.Text = this.SelectedSave.SaveConsoleType == Save.SaveType.Switch ? $"BotW {this.SelectedSave.GameVersion} - Switch" : $"BotW {this.SelectedSave.GameVersion} - Wii U";
+            this.lblConsoleName.Text = string.Empty;
+
+            for (int index = 0; index < this.SelectedSave.SaveVersionList.Count; index++)
+            {
+                string s = this.SelectedSave.SaveVersionList[index];
+                this.lblConsoleName.Text += $"Save {index}: {s}\n";
+            }
         }
 
         private void BtnBrowse_Click(object sender, EventArgs e)
@@ -139,21 +138,25 @@ namespace BotWSaveManager.UI
                 foreach (KeyValuePair<string, byte[]> convertSaveByte in this.SaveFilesDictionary)
                 {
                     string saveTo = Directory.GetFiles(this.tbSaveLocation.Text, "*.sav", SearchOption.AllDirectories)
-                        .First(e => Path.GetFileName(e) == "option.sav" ||
+                        .First(e => Path.GetFileName(convertSaveByte.Key) == "option.sav" ||
                                     Path.GetFileName(e) == Path.GetFileName(convertSaveByte.Key) &&
                                     Directory.GetParent(e).Name == Directory.GetParent(convertSaveByte.Key).Name);
 
                     File.WriteAllBytes(saveTo, convertSaveByte.Value);
                 }
+
+                this.SelectedSave = new Save(this.tbSaveLocation.Text, true);
             }
             catch (Exception exception)
             {
-                File.WriteAllText(Path.Combine(Application.StartupPath, $"error-{DateTime.Now.ToString(CultureInfo.CurrentCulture)}.log"), exception.ToString());
+                File.WriteAllText(Path.Combine(Application.StartupPath, $"error-{DateTime.Now.ToFileTime()}.log"), exception.ToString());
 
                 MessageBox.Show("Error writing save files to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", exception.Message);
+
+                return;
             }
 
-            MessageBox.Show($"Files written successfully! Please note that you are required to use {this.SelectedSave.GameVersion} of BotW on the target system with (probably) the same DLC for this save file to work.");
+            MessageBox.Show("Files written successfully!");
         }
     }
 }
