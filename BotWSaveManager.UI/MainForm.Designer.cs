@@ -39,6 +39,7 @@
             this.lblConsoleName = new System.Windows.Forms.Label();
             this.pbConsole = new System.Windows.Forms.PictureBox();
             this.lblFileWarning = new System.Windows.Forms.Label();
+            this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripFile.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pbConsole)).BeginInit();
             this.SuspendLayout();
@@ -47,7 +48,8 @@
             // 
             this.menuStripFile.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.helpToolStripMenuItem});
             this.menuStripFile.Location = new System.Drawing.Point(0, 0);
             this.menuStripFile.Name = "menuStripFile";
             this.menuStripFile.Size = new System.Drawing.Size(462, 24);
@@ -144,6 +146,13 @@
             this.lblFileWarning.TabIndex = 0;
             this.lblFileWarning.Text = "Please select a save file from the context menu...";
             // 
+            // helpToolStripMenuItem
+            // 
+            this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
+            this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.helpToolStripMenuItem.Text = "Help";
+            this.helpToolStripMenuItem.Click += new System.EventHandler(this.helpToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -182,6 +191,7 @@
         private System.Windows.Forms.Button btnSaveToFiles;
         private System.Windows.Forms.Button btnBrowse;
         private System.Windows.Forms.TextBox tbSaveLocation;
+        private System.Windows.Forms.ToolStripMenuItem helpToolStripMenuItem;
     }
 }
 

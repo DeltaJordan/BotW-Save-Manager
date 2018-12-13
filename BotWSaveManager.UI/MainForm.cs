@@ -11,7 +11,11 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using BotWSaveManager.Conversion;
 using BotWSaveManager.Conversion.IO;
+using BotWSaveManager.UI.Logging;
 using BotWSaveManager.UI.Properties;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 
 namespace BotWSaveManager.UI
 {
@@ -20,29 +24,79 @@ namespace BotWSaveManager.UI
         public Save SelectedSave;
         public Dictionary<string, byte[]> SaveFilesDictionary;
 
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         public MainForm()
         {
             this.InitializeComponent();
+
+            Directory.CreateDirectory(Path.Combine(Application.StartupPath, "Logs"));
+
+            string logFileName = $"{DateTime.Now:dd-MM-yy}-1.log";
+
+            int index = 2;
+            while (File.Exists(Path.Combine(Application.StartupPath, "Logs", logFileName)))
+            {
+                logFileName = $"{DateTime.Now:dd-MM-yy}-{index}.log";
+                index++;
+            }
+
+            LoggingConfiguration config = new LoggingConfiguration();
+
+            FileTarget logfile = new FileTarget("logfile")
+            {
+                FileName = Path.Combine(Application.StartupPath, "Logs", logFileName),
+                Layout = "${time} ${level:uppercase=true} ${logger} ${message}"
+            };
+            config.AddRule(LogLevel.Trace, LogLevel.Fatal, logfile);
+
+            LogManager.Configuration = config;
         }
 
         private void OpenSaveToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Logger.Info("Initiating save folder selection.");
+
             FolderBrowserDialog dia = new FolderBrowserDialog();
 
             if (dia.ShowDialog() == DialogResult.OK)
             {
                 try
                 {
+                    Logger.Info($"Save folder {dia.SelectedPath} selected.");
+                    Logger.Trace($"Logging directory structure...\n{LogHelper.VisualizeDirectoryAsString(dia.SelectedPath)}");
+
                     this.SelectedSave = new Save(dia.SelectedPath);
                 }
                 catch (UnsupportedSaveException exception)
                 {
-                    if (exception.IsSwitch && MessageBox.Show("The version of a numbered save folder you selected cannot be retrieved. If you would like to attempt to use this file anyways, select Yes.", "Possibly unsupported save.", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    Logger.Error(exception, "Selected save folder failed to initialize.");
+
+                    if (exception.IsSwitch)
                     {
-                        this.SelectedSave = new Save(dia.SelectedPath, true);
+                        Logger.Error("The version of a numbered Switch save folder selected could not be retrieved. Prompting user to ignore error.");
+
+                        if (MessageBox.Show("The version of a numbered save folder you selected cannot be retrieved. If you would like to attempt to use this file anyways, select Yes.", "Possibly unsupported save.", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            Logger.Info("User chose to ignore error. Initializing save with Switch version checking disabled.");
+                            this.SelectedSave = new Save(dia.SelectedPath, true);
+                        }
+                        else
+                        {
+                            Logger.Fatal("Aborting save loading as per user request.");
+                            MessageBox.Show(exception.Message);
+                            this.btnConvert.Hide();
+                            this.tbSaveLocation.Hide();
+                            this.btnBrowse.Hide();
+                            this.btnSaveToFiles.Hide();
+                            this.pbConsole.Image = null;
+                            this.lblConsoleName.Text = "";
+                            return;
+                        }
                     }
                     else
                     {
+                        Logger.Fatal("Aborting save loading due to unexpected version error.");
                         MessageBox.Show(exception.Message);
                         this.btnConvert.Hide();
                         this.tbSaveLocation.Hide();
@@ -58,6 +112,7 @@ namespace BotWSaveManager.UI
 
                 foreach (string file in Directory.GetFiles(this.SelectedSave.SaveFolder, "*.sav", SearchOption.AllDirectories))
                 {
+                    Logger.Info($"Loading save file {file}.");
                     this.SaveFilesDictionary.Add(file, File.ReadAllBytes(file));
                 }
 
@@ -69,6 +124,7 @@ namespace BotWSaveManager.UI
                 for (int index = 0; index < this.SelectedSave.SaveVersionList.Count; index++)
                 {
                     string s = this.SelectedSave.SaveVersionList[index];
+                    Logger.Info($"Save {index} is of version \"{s}\".");
                     this.lblConsoleName.Text += $"Save {index}: {s}\n";
                 }
 
@@ -79,13 +135,21 @@ namespace BotWSaveManager.UI
             }
             else
             {
+                Logger.Info("User did not select a file.");
                 MessageBox.Show("Please select your save folder before continuing.");
             }
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            Logger.Trace("User opened about dialog.");
             new About().Show();
+        }
+
+        private void helpToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Logger.Trace("User opened help dialog.");
+            new Help().ShowDialog();
         }
 
         private void BtnConvert_Click(object sender, EventArgs e)
@@ -93,18 +157,19 @@ namespace BotWSaveManager.UI
             this.Enabled = false;
             try
             {
+                Logger.Info("Save conversion initiated.");
                 this.SaveFilesDictionary = this.SelectedSave.ConvertSave();
             }
             catch (Exception exception)
             {
-                File.WriteAllText(Path.Combine(Application.StartupPath, $"error-{DateTime.Now.ToString(CultureInfo.CurrentCulture)}.log"), exception.ToString());
-
+                Logger.Fatal(exception, "Generic error caught during save conversion.");
                 MessageBox.Show("Error converting save file! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log and describe your game progress to the best of your ability.", exception.Message);
 
                 this.Enabled = true;
                 return;
             }
 
+            Logger.Info("Save seems to have converted correctly. Notifying user and updating UI to reflect conversion.");
             MessageBox.Show("Save converted successfully! Just save the folder and copy it to your Nintendo console.");
 
             this.Enabled = true;
@@ -121,10 +186,13 @@ namespace BotWSaveManager.UI
 
         private void BtnBrowse_Click(object sender, EventArgs e)
         {
+            Logger.Info("User selecting location to write resulting save folder.");
+
             FolderBrowserDialog dia = new FolderBrowserDialog();
 
             if (dia.ShowDialog() == DialogResult.OK)
             {
+                Logger.Info($"Selected write location {dia.SelectedPath}.");
                 this.tbSaveLocation.Text = dia.SelectedPath;
             }
         }
@@ -133,6 +201,9 @@ namespace BotWSaveManager.UI
         {
             try
             {
+                Logger.Info($"Initiating write process for converted save with projected folder {this.tbSaveLocation.Text}.");
+
+                Logger.Info("Making duplicate of original folder to preserve non-save files.");
                 CopyDir.Copy(this.SelectedSave.SaveFolder, this.tbSaveLocation.Text);
 
                 foreach (KeyValuePair<string, byte[]> convertSaveByte in this.SaveFilesDictionary)
@@ -142,19 +213,24 @@ namespace BotWSaveManager.UI
                                     Path.GetFileName(e) == Path.GetFileName(convertSaveByte.Key) &&
                                     Directory.GetParent(e).Name == Directory.GetParent(convertSaveByte.Key).Name);
 
+                    Logger.Info($"Writing save file {saveTo}.");
+
                     File.WriteAllBytes(saveTo, convertSaveByte.Value);
                 }
 
+                Logger.Info("Loading converted save as the selected save.");
                 this.SelectedSave = new Save(this.tbSaveLocation.Text, true);
             }
             catch (Exception exception)
             {
-                File.WriteAllText(Path.Combine(Application.StartupPath, $"error-{DateTime.Now.ToFileTime()}.log"), exception.ToString());
+                Logger.Error(exception, "Generic exception caught while writing converted save.");
 
                 MessageBox.Show("Error writing save files to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", exception.Message);
 
                 return;
             }
+
+            Logger.Info("Process complete. Application entering standby.\nInkling is the best Smash Ultimate character :)\n" + Program.SS);
 
             MessageBox.Show("Files written successfully!");
         }
