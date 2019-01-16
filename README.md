@@ -10,9 +10,9 @@ BotW Save Manager is a fork of https://github.com/WemI0/BOTW_SaveConv that at th
 
 ### Windows-only UI
 
-1. Select File>Open save>option.sav in your save folder.
+1. Select File > Open save > The folder that contains "option.sav".
 2. Click convert and wait for it to finish.
-3. Click Browse to the folder you want to save it to.
+3. Click Browse to the folder you want to save it to, preferrably an empty folder.
 4. Click Save and the application should write it to the folder.
 
 ### Cross-platform command-line
