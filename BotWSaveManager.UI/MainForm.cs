@@ -162,7 +162,9 @@ namespace BotWSaveManager.UI
             }
             catch (Exception exception)
             {
-                Logger.Fatal(exception, "Generic error caught during save conversion.");
+                Logger.Fatal("Generic error caught during save conversion.");
+                Logger.Fatal(exception);
+
                 MessageBox.Show("Error converting save file! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log and describe your game progress to the best of your ability.", exception.Message);
 
                 this.Enabled = true;
@@ -223,7 +225,8 @@ namespace BotWSaveManager.UI
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, "Generic exception caught while writing converted save.");
+                Logger.Error("Generic exception caught while writing converted save.");
+                Logger.Error(exception);
 
                 MessageBox.Show("Error writing save files to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", exception.Message);
 
