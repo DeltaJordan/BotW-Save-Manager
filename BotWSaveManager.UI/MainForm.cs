@@ -15,6 +15,7 @@ using BotWSaveManager.UI.Logging;
 using BotWSaveManager.UI.Properties;
 using NLog;
 using NLog.Config;
+using NLog.Fluent;
 using NLog.Targets;
 
 namespace BotWSaveManager.UI
@@ -207,25 +208,10 @@ namespace BotWSaveManager.UI
 
                 Logger.Info("Making duplicate of original folder to preserve non-save files.");
                 CopyDir.Copy(this.SelectedSave.SaveFolder, this.tbSaveLocation.Text);
-
-                foreach (KeyValuePair<string, byte[]> convertSaveByte in this.SaveFilesDictionary)
-                {
-                    string saveTo = Directory.GetFiles(this.tbSaveLocation.Text, "*.sav", SearchOption.AllDirectories)
-                        .First(e => Path.GetFileName(convertSaveByte.Key) == "option.sav" ||
-                                    Path.GetFileName(e) == Path.GetFileName(convertSaveByte.Key) &&
-                                    Directory.GetParent(e).Name == Directory.GetParent(convertSaveByte.Key).Name);
-
-                    Logger.Info($"Writing save file {saveTo}.");
-
-                    File.WriteAllBytes(saveTo, convertSaveByte.Value);
-                }
-
-                Logger.Info("Loading converted save as the selected save.");
-                this.SelectedSave = new Save(this.tbSaveLocation.Text, true);
             }
             catch (Exception exception)
             {
-                Logger.Error("Generic exception caught while writing converted save.");
+                Logger.Error("Generic exception caught while duplicating save files.");
                 Logger.Error(exception);
 
                 MessageBox.Show("Error writing save files to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", exception.Message);
@@ -233,7 +219,79 @@ namespace BotWSaveManager.UI
                 return;
             }
 
-            Logger.Info("Process complete. Application entering standby.\nInkling is the best Smash Ultimate character :)\n" + Program.SS);
+            foreach (KeyValuePair<string, byte[]> convertSaveByte in this.SaveFilesDictionary)
+            {
+                Logger.Info($"Generating output path from original file {convertSaveByte.Key}");
+
+                string saveTo;
+                try
+                {
+                    saveTo = Directory.GetFiles(this.tbSaveLocation.Text, "*.sav", SearchOption.AllDirectories)
+                        .First(e => Path.GetFileName(convertSaveByte.Key) == "option.sav" ||
+                                    Path.GetFileName(e) == Path.GetFileName(convertSaveByte.Key) &&
+                                    Directory.GetParent(e).Name == Directory.GetParent(convertSaveByte.Key).Name);
+                }
+                catch (InvalidOperationException e)
+                {
+                    Logger.Error("Unexpected .sav file in the save directory. Full exception:");
+                    Logger.Error(e);
+
+                    MessageBox.Show($"Unexpected file \"{convertSaveByte.Key}\" was unable to be converted. " +
+                                    $"Try first deleting it from the original save folder, then restarting this application, and finally retrying the conversion. " +
+                                    $"If that doesn't work, make an issue with your log at https://github.com/JordanZeotni/BotW-Save-Manager.", e.Message);
+
+                    return;
+                }
+                catch (Exception e)
+                {
+
+                    Logger.Error("Generic exception caught while finding the output for a .sav file.");
+                    Logger.Error(e);
+
+                    MessageBox.Show("Error writing save files to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", e.Message);
+
+                    return;
+                }
+
+                Logger.Info($"Writing save file {saveTo}.");
+
+                try
+                {
+                    File.WriteAllBytes(saveTo, convertSaveByte.Value);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error($"Generic exception caught while writing .sav file {convertSaveByte.Key}.");
+                    Logger.Error(e);
+
+                    MessageBox.Show("Error writing a save file to disk! Create an issue at https://github.com/JordanZeotni/BotW-Save-Manager with the error log **IF** you think its **NOT** a permission error.", e.Message);
+
+                    return;
+                }
+            }
+
+            Logger.Info("Loading converted save as the selected save.");
+
+            try
+            {
+                this.SelectedSave = new Save(this.tbSaveLocation.Text, true);
+            }
+            catch (Exception e)
+            {
+                Logger.Error("Failed to load converted save. Alerting user that the save may be corrupt but could be potentially still usable.");
+                Logger.Error(e);
+
+                MessageBox.Show("The converted save was unable to be verified. The save may still work on the intended system, " +
+                                "but if it doesn't please make an issue at https://github.com/JordanZeotni/BotW-Save-Manager with your log.");
+                
+                Logger.Info("Process complete. Application entering standby.\nInkling is the best Smash Ultimate character :)\n" +
+                            Encoding.UTF8.GetString(Convert.FromBase64String(Program.SS)));
+
+                return;
+            }
+
+            Logger.Info("Process complete. Application entering standby.\nInkling is the best Smash Ultimate character :)\n" +
+                        Encoding.UTF8.GetString(Convert.FromBase64String(Program.SS)));
 
             MessageBox.Show("Files written successfully!");
         }
