@@ -168,6 +168,19 @@ namespace BotWSaveManager.Conversion
                 {
                     for (int h = 0; h < ms.Length / 4; h++)
                     {
+                        if (file.Contains("trackblock") && h == 0)
+                        {
+                            br.BaseStream.Position = 4;
+                            byte[] reverseHeader = br.ReadBytes(2);
+
+                            Array.Reverse(reverseHeader);
+
+                            BinaryWriter endianUpd = new BinaryWriter(ms);
+                            ms.Position = 4;
+                            endianUpd.Write(reverseHeader);
+                            h = 2;
+                        }
+
                         br.BaseStream.Position = h * 4;
                         byte[] endianConv = br.ReadBytes(4);
 
