@@ -78,21 +78,23 @@ namespace BotWSaveManager.Conversion
 
         public Save(string folder, bool skipSwitchVersionCheck = false)
         {
-            if (!File.Exists(Path.Combine(folder, "option.sav")))
+            this.SaveFolder = folder;
+
+            if (!File.Exists(Path.Combine(this.SaveFolder, "option.sav")))
             {
                 throw new ArgumentException("The selected folder is not a valid Breath of the Wild save folder. " +
                                             "Please select a folder containing valid save data, including option.sav " +
                                             "in the root of the folder.");
             }
 
-            using (FileStream fs = new FileStream(Path.Combine(folder, "option.sav"), FileMode.Open))
+            using (FileStream fs = new FileStream(Path.Combine(this.SaveFolder, "option.sav"), FileMode.Open))
             using (BinaryReader br = new BinaryReader(fs))
             {
                 byte[] check = br.ReadBytes(1);
                 this.SaveConsoleType = ByteArrayToString(check) == "00" ? SaveType.WiiU : SaveType.Switch;
             }
 
-            foreach (string file in Directory.EnumerateFiles(folder, "game_data.sav", SearchOption.AllDirectories))
+            foreach (string file in Directory.EnumerateFiles(this.SaveFolder, "game_data.sav", SearchOption.AllDirectories))
             {
                 using (FileStream fs = new FileStream(file, FileMode.Open))
                 using (BinaryReader br = new BinaryReader(fs))
@@ -153,8 +155,6 @@ namespace BotWSaveManager.Conversion
                     }
                 }
             }
-
-            this.SaveFolder = folder;
         }
 
         public Dictionary<string, byte[]> ConvertSave(string outputLocation = null)
