@@ -39,7 +39,8 @@ namespace BotWSaveManager.Conversion
             0x29c0,
             0x3ef8,
             0x471a,
-            0x471b
+            0x471b,
+            0x471e
         };
 
         private static List<string> versionList = new List<string>
@@ -50,7 +51,8 @@ namespace BotWSaveManager.Conversion
             "v1.3",
             "v1.3.3",
             "v1.4",
-            "v1.5"
+            "v1.5",
+            "v1.6"
         };
 
         private static List<string> items = new List<string>
