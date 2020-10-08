@@ -76,7 +76,7 @@ namespace BotWSaveManager.Conversion
             "0E9D0E75", "750E9D0E"
         };
 
-        public Save(string folder, bool skipSwitchVersionCheck = false)
+        public Save(string folder, bool skipVersionCheck = false)
         {
             this.SaveFolder = folder;
 
@@ -119,7 +119,11 @@ namespace BotWSaveManager.Conversion
                         catch (Exception e)
                         {
                             Console.WriteLine(e);
-                            throw new UnsupportedSaveException("The version of a numbered save folder you selected cannot be retrieved.");
+                            if (!skipVersionCheck)
+                            {
+                                throw new UnsupportedSaveException(
+                                    "The version of a numbered save folder you selected cannot be retrieved.");
+                            }
                         }
                     }
                     else
@@ -147,7 +151,7 @@ namespace BotWSaveManager.Conversion
                         catch (Exception e)
                         {
                             Console.WriteLine(e);
-                            if (!skipSwitchVersionCheck)
+                            if (!skipVersionCheck)
                             {
                                 throw new UnsupportedSaveException("The version of a numbered save folder you selected cannot be retrieved.") {IsSwitch = true};
                             }

@@ -84,31 +84,39 @@ namespace BotWSaveManager.UI
                         }
                         else
                         {
-                            Logger.Fatal("Aborting save loading as per user request.");
+                            Logger.Fatal(exception, "Aborting save loading as per user request.");
                             MessageBox.Show(exception.Message);
-                            this.btnConvert.Hide();
-                            this.tbSaveLocation.Hide();
-                            this.btnBrowse.Hide();
-                            this.btnSaveToFiles.Hide();
-                            this.pbConsole.Image = null;
-                            this.lblConsoleName.Text = "";
+                            this.ResetControls();
                             return;
                         }
                     }
                     else
                     {
-                        Logger.Fatal("Aborting save loading due to unexpected version error.");
-                        MessageBox.Show(exception.Message);
-                        this.btnConvert.Hide();
-                        this.tbSaveLocation.Hide();
-                        this.btnBrowse.Hide();
-                        this.btnSaveToFiles.Hide();
-                        this.pbConsole.Image = null;
-                        this.lblConsoleName.Text = "";
-                        return;
+                        Logger.Error("The version of a numbered Wii U save folder selected could not be retrieved. Prompting user to ignore error.");
+
+                        if (MessageBox.Show("The version of a numbered save folder you selected cannot be retrieved. If you would like to attempt to use this file anyways, select Yes.", "Possibly unsupported save.", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                        {
+                            Logger.Info("User chose to ignore error. Initializing save with Wii U version checking disabled.");
+                            this.SelectedSave = new Save(dia.SelectedPath, true);
+                        }
+                        else
+                        {
+                            Logger.Fatal(exception, "Aborting save loading as per user request.");
+                            MessageBox.Show(exception.Message);
+                            this.ResetControls();
+                            return;
+                        }
                     }
                 }
                 
+                if (this.SelectedSave?.SaveFolder == null)
+                {
+                    Logger.Fatal("The save folder selected by the user is null. Resetting controls and notifying user.");
+                    MessageBox.Show("The selected folder is null or invalid. Try running this app as administrator.");
+                    this.ResetControls();
+                    return;
+                }
+
                 this.SaveFilesDictionary = new Dictionary<string, byte[]>();
 
                 foreach (string file in Directory.GetFiles(this.SelectedSave.SaveFolder, "*.sav", SearchOption.AllDirectories))
@@ -139,6 +147,16 @@ namespace BotWSaveManager.UI
                 Logger.Info("User did not select a file.");
                 MessageBox.Show("Please select your save folder before continuing.");
             }
+        }
+
+        private void ResetControls()
+        {
+            this.btnConvert.Hide();
+            this.tbSaveLocation.Hide();
+            this.btnBrowse.Hide();
+            this.btnSaveToFiles.Hide();
+            this.pbConsole.Image = null;
+            this.lblConsoleName.Text = "";
         }
 
         private void AboutToolStripMenuItem_Click(object sender, EventArgs e)
