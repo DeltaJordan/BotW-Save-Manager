@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BotWSaveManager.UI.Logging
+namespace BotwSaveManager.UI.Logging
 {
     public static class LogHelper
     {

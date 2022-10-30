@@ -9,16 +9,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using BotWSaveManager.Conversion;
-using BotWSaveManager.Conversion.IO;
-using BotWSaveManager.UI.Logging;
-using BotWSaveManager.UI.Properties;
+using BotwSaveManager.Conversion;
+using BotwSaveManager.Conversion.IO;
+using BotwSaveManager.UI.Logging;
+using BotwSaveManager.UI.Properties;
 using NLog;
 using NLog.Config;
 using NLog.Fluent;
 using NLog.Targets;
 
-namespace BotWSaveManager.UI
+namespace BotwSaveManager.UI
 {
     public partial class MainForm : Form
     {

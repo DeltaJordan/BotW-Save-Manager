@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using BotWSaveManager.Conversion;
-using BotWSaveManager.Conversion.IO;
+using BotwSaveManager.Conversion;
+using BotwSaveManager.Conversion.IO;
 
-namespace BotWSaveManager.Command
+namespace BotwSaveManager.Command
 {
     public static class Program
     {

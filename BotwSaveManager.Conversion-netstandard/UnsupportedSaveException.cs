@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace BotWSaveManager.Conversion
+namespace BotwSaveManager.Conversion
 {
     public class UnsupportedSaveException : Exception
     {

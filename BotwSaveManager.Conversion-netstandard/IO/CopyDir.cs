@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace BotWSaveManager.Conversion.IO
+namespace BotwSaveManager.Conversion.IO
 {
     public static class CopyDir
     {

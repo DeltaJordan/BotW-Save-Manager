@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace BotWSaveManager.UI.Properties {
+namespace BotwSaveManager.UI.Properties {
     using System;
     
     

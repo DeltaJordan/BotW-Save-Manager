@@ -1,4 +1,4 @@
-﻿namespace BotWSaveManager.UI
+﻿namespace BotwSaveManager.UI
 {
     partial class Help
     {
@@ -36,7 +36,7 @@
             // pbExample
             // 
             this.pbExample.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pbExample.Image = global::BotWSaveManager.UI.Properties.Resources.example;
+            this.pbExample.Image = global::BotwSaveManager.UI.Properties.Resources.example;
             this.pbExample.Location = new System.Drawing.Point(0, 40);
             this.pbExample.Name = "pbExample";
             this.pbExample.Size = new System.Drawing.Size(585, 217);

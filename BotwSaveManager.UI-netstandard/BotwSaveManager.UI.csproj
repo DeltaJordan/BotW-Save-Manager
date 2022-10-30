@@ -112,9 +112,9 @@
     <EmbeddedResource Include="Resources\wii-u-logo.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\BotWSaveManager.Conversion\BotWSaveManager.Conversion.csproj">
+    <ProjectReference Include="..\BotWSaveManager.Conversion-netstandard\BotwSaveManager.Conversion.csproj">
       <Project>{760b1117-bc1d-4c8c-a392-4136c94d3bc5}</Project>
-      <Name>BotWSaveManager.Conversion</Name>
+      <Name>BotwSaveManager.Conversion</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

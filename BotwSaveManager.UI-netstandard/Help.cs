@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BotWSaveManager.UI
+namespace BotwSaveManager.UI
 {
     public partial class Help : Form
     {

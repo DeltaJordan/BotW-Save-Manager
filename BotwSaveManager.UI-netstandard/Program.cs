@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace BotWSaveManager.UI
+namespace BotwSaveManager.UI
 {
     static class Program
     {

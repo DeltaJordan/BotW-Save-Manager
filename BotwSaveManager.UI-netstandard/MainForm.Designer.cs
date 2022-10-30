@@ -1,4 +1,4 @@
-﻿namespace BotWSaveManager.UI
+﻿namespace BotwSaveManager.UI
 {
     partial class MainForm
     {

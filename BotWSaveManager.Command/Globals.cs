@@ -2,7 +2,7 @@
 using System.IO;
 using System.Reflection;
 
-namespace BotWSaveManager.Command
+namespace BotwSaveManager.Command
 {
     public static class Globals
     {
