@@ -25,7 +25,8 @@ namespace BotwSaveManager.Models
         [Menu("Help", "_About", Icon = MaterialIconKind.Help)]
         public void Help()
         {
-
+            HelpView help = new();
+            help.ShowDialog(View);
         }
     }
 }

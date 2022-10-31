@@ -1,0 +1,69 @@
+<Window x:Class="BotwSaveManager.Views.HelpView"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="using:BotwSaveManager"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mdix="using:Material.Icons.Avalonia"
+        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+        Width="600"
+        Height="370"
+        Background="{DynamicResource SystemChromeMediumColor}"
+        Icon="/Assets/icon.ico"
+        ExtendClientAreaToDecorationsHint="True"
+        ExtendClientAreaChromeHints="NoChrome"
+        ShowInTaskbar="False"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Help">
+
+    <Grid Margin="10" RowDefinitions="30,auto,auto,auto">
+
+        <StackPanel Orientation="Horizontal">
+            <Image Source="/Assets/icon.ico"
+                   Width="24"
+                   Margin="3"
+                   HorizontalAlignment="Left" />
+            <TextBlock Text="Help"
+                       Margin="10,1,0,0"
+                       VerticalAlignment="Center"
+                       HorizontalAlignment="Center"
+                       IsHitTestVisible="False" />
+        </StackPanel>
+
+        <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <StackPanel.Styles>
+                <Style Selector="Button">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="CornerRadius" Value="0" />
+                </Style>
+            </StackPanel.Styles>
+            <Button Width="40"
+                    Height="30"
+                    Command="{Binding Quit}"
+                    IsVisible="{x:Static app:Meta.IsWindows}">
+                <mdix:MaterialIcon Margin="0,1,0,0" Kind="Close">
+                    <mdix:MaterialIcon.RenderTransform>
+                        <ScaleTransform ScaleX="1.4" ScaleY="1.4" />
+                    </mdix:MaterialIcon.RenderTransform>
+                </mdix:MaterialIcon>
+            </Button>
+        </StackPanel>
+
+        <TextBlock HorizontalAlignment="Center"
+                   TextAlignment="Center"
+                   Grid.Row="1"
+                   Margin="0,15,0,0"
+                   Text="This is what the folder you are selecting should look like.&#x0a;Dot not select one of these folders; select the folder that contains these items."/>
+        
+        <Border Height="2"
+                Margin="0,10"
+                Background="{DynamicResource SystemAccentColor}"
+                Grid.Row="2" />
+        
+        <Image Source="/Assets/folder-structure.jpg"
+               Grid.Row="3" />
+        
+    </Grid>
+  
+</Window>
