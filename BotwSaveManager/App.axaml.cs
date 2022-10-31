@@ -1,9 +1,12 @@
 #pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
+global using static BotwSaveManager.App;
+
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Themes.Fluent;
+using AvaloniaGenerics.Dialogs;
 using BotwSaveManager.ViewModels;
 using BotwSaveManager.Views;
 using System;
@@ -27,11 +30,10 @@ namespace BotwSaveManager
             View.DataContext = ViewModel;
 
             if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop) {
-                desktop.MainWindow = new AppView {
-                    DataContext = new AppViewModel(),
-                };
+                desktop.MainWindow = View;
             }
 
+            View.InitializeGenericDialogs();
             base.OnFrameworkInitializationCompleted();
         }
     }

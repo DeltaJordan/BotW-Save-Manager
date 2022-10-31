@@ -1,4 +1,5 @@
 ﻿using Avalonia.MenuFactory.Attributes;
+using AvaloniaGenerics.Dialogs;
 using Material.Icons;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace BotwSaveManager.Models
         }
 
         [Menu("Readme", "_About", Icon = MaterialIconKind.HandshakeOutline)]
-        public void Readme()
+        public async void Readme()
         {
-
+            await MessageBox.Show(Resource.Load("README.md").ToString(), "Readme", formatting: Formatting.Markdown, icon: MaterialIconKind.HandshakeOutline);
         }
 
         [Menu("Help", "_About", Icon = MaterialIconKind.Help)]
