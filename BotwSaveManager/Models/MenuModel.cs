@@ -1,5 +1,6 @@
 ﻿using Avalonia.MenuFactory.Attributes;
 using AvaloniaGenerics.Dialogs;
+using BotwSaveManager.Views;
 using Material.Icons;
 using System;
 using System.Collections.Generic;
@@ -12,9 +13,13 @@ namespace BotwSaveManager.Models
     public class MenuModel
     {
         [Menu("Open Save", "_File", "Ctrl + O", Icon = MaterialIconKind.FolderOpenOutline)]
-        public void OpenSave()
+        public async void OpenSave()
         {
+            string? folder = await BrowserDialog.Folder.ShowDialog("Open Botw Save Folder");
 
+            if (folder != null) {
+
+            }
         }
 
         [Menu("Readme", "_About", Icon = MaterialIconKind.HandshakeOutline)]
