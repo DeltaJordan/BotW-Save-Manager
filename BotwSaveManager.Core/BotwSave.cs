@@ -70,7 +70,7 @@ namespace BotwSaveManager.Core
             foreach (var file in Directory.EnumerateFiles(SourceFolder, "game_data.sav", SearchOption.AllDirectories)) {
 
                 try {
-                    Logger.Write($"Loading {file}...");
+                    Logger.Write($"Loading \"{file}\"...");
                     using (FileStream fs = File.OpenRead(file)) {
 
                         // Read header data
@@ -85,7 +85,7 @@ namespace BotwSaveManager.Core
                         // Collect version
                         string version = Versions[Headers.AsSpan().IndexOf(BitConverter.ToUInt16(headerData))];
                         VersionList.Add(version);
-                        Logger.Write($"Found {SaveType} version {version} on {file}");
+                        Logger.Write($"Found {SaveType} version {version} on \"{file}\"");
                     }
                 }
                 catch (Exception ex) {
