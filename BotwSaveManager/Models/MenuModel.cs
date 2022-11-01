@@ -1,6 +1,4 @@
-﻿#pragma warning disable CA1822 // Mark members as static
-
-using Avalonia.MenuFactory.Attributes;
+﻿using Avalonia.MenuFactory.Attributes;
 using AvaloniaGenerics.Dialogs;
 using BotwSaveManager.Core;
 using BotwSaveManager.Core.Helpers;

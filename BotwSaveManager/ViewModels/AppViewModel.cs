@@ -1,4 +1,3 @@
-﻿#pragma warning disable CA1822 // Mark members as static
 
 using Avalonia.Controls;
 using Avalonia.Input;
