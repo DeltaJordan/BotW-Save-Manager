@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BotwSaveManager.Core.Helpers;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
@@ -52,10 +53,5 @@ namespace BotwSaveManager
         public T? ParseJson<T>() => JsonSerializer.Deserialize<T>(Data);
 
         public static Resource Load(string name, string? root = null) => new(name, root ?? Namespace);
-    }
-
-    public static class PathExt
-    {
-        public static string ToCommonPath(this string path) => path.Replace("\\", "/");
     }
 }

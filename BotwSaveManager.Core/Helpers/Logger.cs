@@ -30,7 +30,7 @@ namespace BotwSaveManager.Core.Helpers
         public static void Write(object msg, [CallerMemberName] string method = "", [CallerFilePath] string filepath = "", [CallerLineNumber] int lineNumber = 0)
         {
             string meta = $"{DateTime.Now:dd:mm:ss:fff} [{method}] | \"{Path.GetRelativePath(SourceRoot, filepath)}\":{lineNumber} | ";
-            Trace.WriteLine($"{meta}{msg.ToString()?.Replace("\n", $"\n{new string(' ', meta.Length)}")}");
+            Trace.WriteLine($"{meta}{msg.ToString()?.Replace("\n", $"\n{new string(' ', meta.Length)}")}".ToCommonPath());
         }
     }
 }
