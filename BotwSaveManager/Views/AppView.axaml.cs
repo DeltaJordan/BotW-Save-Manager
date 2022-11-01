@@ -20,6 +20,22 @@ namespace BotwSaveManager.Views
             DropTarget!.AddHandler(DragDrop.DropEvent, DragDropEvent);
         }
 
+        protected override void HandleWindowStateChanged(WindowState state)
+        {
+            if (state == WindowState.Maximized) {
+                Padding = new Thickness(7);
+                ExtendClientAreaTitleBarHeightHint = 44;
+                ViewModel.IsMaximized = true;
+            }
+            else {
+                Padding = new Thickness(0);
+                ExtendClientAreaTitleBarHeightHint = 30;
+                ViewModel.IsMaximized = false;
+            }
+
+            base.HandleWindowStateChanged(state);
+        }
+
         public void DragDropEvent(object? sender, DragEventArgs e)
         {
             Debug.WriteLine(e.Data.GetFileNames()?.FirstOrDefault());
