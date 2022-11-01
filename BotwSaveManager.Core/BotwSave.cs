@@ -74,8 +74,8 @@ namespace BotwSaveManager.Core
                     using (FileStream fs = File.OpenRead(file)) {
 
                         // Read header data
-                        byte[] headerData = new byte[2];
-                        fs.Read(headerData, SaveType == SaveType.WiiU ? 1 : 0, 2);
+                        byte[] headerData = new byte[4];
+                        fs.Read(headerData, 0, 4);
 
                         // Reverse header on WiiU files
                         if (SaveType == SaveType.WiiU) {
