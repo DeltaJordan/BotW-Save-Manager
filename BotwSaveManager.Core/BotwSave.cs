@@ -55,22 +55,23 @@ namespace BotwSaveManager.Core
         {
             SourceFolder = sourceFolder;
 
-            if (!File.Exists($"{sourceFolder}/options.sav")) {
+            if (!File.Exists($"{sourceFolder}/option.sav")) {
                 throw new FileNotFoundException(
                     $"Invalid BotwSave folder: '{sourceFolder}'\n" +
-                    $"The selected folder does not contain an 'options.sav' file."
+                    $"The selected folder does not contain an 'option.sav' file."
                 );
             }
 
             // Read save type
-            using (FileStream fs = File.OpenRead($"{sourceFolder}/options.sav")) {
-                SaveType = (SaveType)fs.ReadByte();
+            using (BinaryReader reader = new(File.OpenRead($"{sourceFolder}/option.sav"))) {
+                SaveType = (SaveType)BitConverter.ToUInt32(reader.ReadBytes(4));
             }
 
-            foreach (var file in Directory.EnumerateFiles(SourceFolder, "game_date.sav", SearchOption.AllDirectories)) {
+            foreach (var file in Directory.EnumerateFiles(SourceFolder, "game_data.sav", SearchOption.AllDirectories)) {
 
                 try {
                     using (FileStream fs = File.OpenRead($"{sourceFolder}/options.sav")) {
+                    using (FileStream fs = File.OpenRead(file)) {
 
                         // Read header data
                         byte[] headerData = new byte[2];
