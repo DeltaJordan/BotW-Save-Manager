@@ -29,7 +29,10 @@ namespace BotwSaveManager.Views
 
             DropTarget = this.FindControl<Grid>("DropTarget");
             DropTarget!.AddHandler(DragDrop.DropEvent, DragDropEvent);
+            DropTarget!.AddHandler(Grid.DoubleTappedEvent, DoubleTappedEvent);
         }
+
+        public new void DoubleTappedEvent(object? sender, EventArgs e) => View.MenuModel.OpenSaveFolder();
 
         public async void DragDropEvent(object? sender, DragEventArgs e)
         {

@@ -17,7 +17,7 @@ namespace BotwSaveManager.ViewModels
     public class AppViewModel : ReactiveObject
     {
         private static readonly TextBlock Default = new() {
-            Text = "Drag and drop a save folder to open it.",
+            Text = "Drag and drop a save folder or double click to browse for one.",
             HorizontalAlignment = HorizontalAlignment.Center,
             VerticalAlignment = VerticalAlignment.Center
         };
