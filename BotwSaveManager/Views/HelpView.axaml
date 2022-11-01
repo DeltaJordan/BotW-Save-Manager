@@ -5,30 +5,32 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mdix="using:Material.Icons.Avalonia"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="400"
+        Title="Help"
         Width="600"
         Height="370"
+        d:DesignHeight="400"
+        d:DesignWidth="600"
         Background="{DynamicResource SystemChromeMediumColor}"
-        Icon="/Assets/icon.ico"
-        ExtendClientAreaToDecorationsHint="True"
-        ExtendClientAreaChromeHints="NoChrome"
-        ShowInTaskbar="False"
         CanResize="False"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaToDecorationsHint="True"
+        Icon="/Assets/icon.ico"
+        ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
-        Title="Help">
+        mc:Ignorable="d">
 
     <Grid Margin="10" RowDefinitions="30,auto,auto,auto">
 
         <StackPanel Orientation="Horizontal">
-            <Image Source="/Assets/icon.ico"
-                   Width="24"
+            <Image Width="24"
                    Margin="3"
-                   HorizontalAlignment="Left" />
-            <TextBlock Text="Help"
-                       Margin="10,1,0,0"
-                       VerticalAlignment="Center"
+                   HorizontalAlignment="Left"
+                   Source="/Assets/icon.ico" />
+            <TextBlock Margin="10,1,0,0"
                        HorizontalAlignment="Center"
-                       IsHitTestVisible="False" />
+                       VerticalAlignment="Center"
+                       IsHitTestVisible="False"
+                       Text="Help" />
         </StackPanel>
 
         <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
@@ -50,20 +52,19 @@
             </Button>
         </StackPanel>
 
-        <TextBlock HorizontalAlignment="Center"
-                   TextAlignment="Center"
-                   Grid.Row="1"
+        <TextBlock Grid.Row="1"
                    Margin="0,15,0,0"
-                   Text="This is what the folder you are selecting should look like.&#x0a;Dot not select one of these folders; select the folder that contains these items."/>
-        
-        <Border Height="2"
+                   HorizontalAlignment="Center"
+                   Text="This is what the folder you are selecting should look like.&#x0a;Dot not select one of these folders; select the folder that contains these items."
+                   TextAlignment="Center" />
+
+        <Border Grid.Row="2"
+                Height="2"
                 Margin="0,10"
-                Background="{DynamicResource SystemAccentColor}"
-                Grid.Row="2" />
-        
-        <Image Source="/Assets/folder-structure.jpg"
-               Grid.Row="3" />
-        
+                Background="{DynamicResource SystemAccentColor}" />
+
+        <Image Grid.Row="3" Source="/Assets/folder-structure.jpg" />
+
     </Grid>
-  
+
 </Window>

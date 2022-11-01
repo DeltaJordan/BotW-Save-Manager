@@ -1,37 +1,41 @@
-<Window xmlns="https://github.com/avaloniaui"
+<Window x:Class="BotwSaveManager.Views.AppView"
+        xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="using:BotwSaveManager"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:app="using:BotwSaveManager"
         xmlns:mdix="using:Material.Icons.Avalonia"
-        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
-        x:Class="BotwSaveManager.Views.AppView"
         Title="{x:Static app:Meta.Name}"
         Width="600"
         Height="400"
         MinWidth="600"
         MinHeight="400"
+        d:DesignHeight="450"
+        d:DesignWidth="800"
         Background="{DynamicResource SystemChromeLowColor}"
-        ExtendClientAreaToDecorationsHint="True"
         ExtendClientAreaChromeHints="NoChrome"
-        Icon="/Assets/icon.ico">
+        ExtendClientAreaToDecorationsHint="True"
+        Icon="/Assets/icon.ico"
+        mc:Ignorable="d">
 
     <Grid RowDefinitions="30,*">
-        
+
         <Grid>
-            <Border Background="{DynamicResource SystemChromeHighColor}" IsHitTestVisible="False" Opacity="0.6" />
-            <Image Source="/Assets/icon.ico"
-                   Width="24"
+            <Border Background="{DynamicResource SystemChromeHighColor}"
+                    IsHitTestVisible="False"
+                    Opacity="0.6" />
+            <Image Width="24"
                    Margin="3"
-                   HorizontalAlignment="Left" />
+                   HorizontalAlignment="Left"
+                   Source="/Assets/icon.ico" />
             <Menu Name="RootMenu"
-                  HorizontalAlignment="Left"
-                  Margin="30,0,0,0"/>
-            <TextBlock Text="{x:Static app:Meta.Footer}"
+                  Margin="30,0,0,0"
+                  HorizontalAlignment="Left" />
+            <TextBlock HorizontalAlignment="Center"
                        VerticalAlignment="Center"
-                       HorizontalAlignment="Center"
                        FontSize="11"
-                       IsHitTestVisible="False" />
+                       IsHitTestVisible="False"
+                       Text="{x:Static app:Meta.Footer}" />
             <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
                 <StackPanel.Styles>
                     <Style Selector="Button">
@@ -75,13 +79,11 @@
         </Grid>
 
 
-        <Grid Grid.Row="1"
-              Name="DropTarget"
-              DragDrop.AllowDrop="True"
-              Background="Transparent">
-            <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center">
-                Drag and drop a save folder to open it.
-            </TextBlock>
+        <Grid Name="DropTarget"
+              Grid.Row="1"
+              Background="Transparent"
+              DragDrop.AllowDrop="True">
+            <ContentControl Content="{Binding Content}" />
         </Grid>
     </Grid>
 

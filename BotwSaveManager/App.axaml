@@ -1,9 +1,9 @@
-<Application xmlns="https://github.com/avaloniaui"
+<Application x:Class="BotwSaveManager.App"
+             xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="using:BotwSaveManager"
-             x:Class="BotwSaveManager.App">
+             xmlns:local="using:BotwSaveManager">
     <Application.DataTemplates>
-        <local:ViewLocator/>
+        <local:ViewLocator />
     </Application.DataTemplates>
 
     <Application.Styles>
