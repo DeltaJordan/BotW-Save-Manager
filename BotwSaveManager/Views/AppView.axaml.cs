@@ -13,6 +13,9 @@ namespace BotwSaveManager.Views
         public AppView()
         {
             AvaloniaXamlLoader.Load(this);
+#if DEBUG
+            this.AttachDevTools();
+#endif
 
             this.FindControl<Menu>("RootMenu")!.Items = MenuFactory.Generate(new MenuModel());
 
