@@ -6,13 +6,12 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:mdix="using:Material.Icons.Avalonia"
         Title="{x:Static app:Meta.Name}"
-        Width="600"
-        Height="400"
-        MinWidth="600"
-        MinHeight="400"
-        d:DesignHeight="400"
-        d:DesignWidth="600"
+        Width="640"
+        Height="450"
+        d:DesignHeight="450"
+        d:DesignWidth="640"
         Background="{DynamicResource SystemChromeLowColor}"
+        CanResize="False"
         ExtendClientAreaChromeHints="NoChrome"
         ExtendClientAreaToDecorationsHint="True"
         Icon="/Assets/icon.ico"
@@ -42,6 +41,9 @@
                         <Setter Property="Background" Value="Transparent" />
                         <Setter Property="CornerRadius" Value="0" />
                     </Style>
+                    <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
                     <Style Selector="mdix|MaterialIcon">
                         <Setter Property="Width" Value="24" />
                         <Setter Property="Height" Value="24" />
@@ -58,16 +60,9 @@
                 </Button>
                 <Button Width="40"
                         Height="30"
-                        Command="{Binding ChangeState}"
+                        IsEnabled="False"
                         IsVisible="{x:Static app:Meta.IsWindows}">
-                    <Grid>
-                        <mdix:MaterialIcon Name="Chrome_Fullscreen"
-                                           IsVisible="{Binding !IsMaximized}"
-                                           Kind="Fullscreen" />
-                        <mdix:MaterialIcon Name="Chrome_Restore"
-                                           IsVisible="{Binding IsMaximized}"
-                                           Kind="WindowRestore" />
-                    </Grid>
+                    <mdix:MaterialIcon Kind="Fullscreen" />
                 </Button>
                 <Button Width="40"
                         Height="30"

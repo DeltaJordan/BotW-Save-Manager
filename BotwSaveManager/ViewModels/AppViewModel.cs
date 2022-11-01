@@ -31,14 +31,7 @@ namespace BotwSaveManager.ViewModels
         //
         // Window Settings
 
-        public void ChangeState() => View.WindowState = View.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
         public void Minimize() => View.WindowState = WindowState.Minimized;
         public void Quit() => View.MenuModel.Quit();
-
-        private bool isMaximized = false;
-        public bool IsMaximized {
-            get => isMaximized;
-            set => this.RaiseAndSetIfChanged(ref isMaximized, value);
-        }
     }
 }
