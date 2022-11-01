@@ -1,4 +1,6 @@
-﻿using Avalonia.MenuFactory.Attributes;
+﻿#pragma warning disable CA1822 // Mark members as static
+
+using Avalonia.MenuFactory.Attributes;
 using AvaloniaGenerics.Dialogs;
 using BotwSaveManager.Views;
 using Material.Icons;
@@ -19,6 +21,14 @@ namespace BotwSaveManager.Models
 
             if (folder != null) {
 
+            }
+        }
+
+        [Menu("Quit", "_File", "Alt + F4", Icon = MaterialIconKind.ExitToApp, IsSeparator = true)]
+        public async void Quit()
+        {
+            if (await MessageBox.Show("Are you sure you wish to exit?", "Warning", MessageBoxButtons.YesNoCancel, icon: MaterialIconKind.WarningBox) == MessageBoxResult.Yes) {
+                Environment.Exit(0);
             }
         }
 
