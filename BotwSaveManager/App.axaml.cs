@@ -7,6 +7,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Themes.Fluent;
 using AvaloniaGenerics.Dialogs;
+using BotwSaveManager.Core.Helpers;
 using BotwSaveManager.ViewModels;
 using BotwSaveManager.Views;
 using System;
@@ -33,6 +34,7 @@ namespace BotwSaveManager
                 desktop.MainWindow = View;
             }
 
+            Logger.Initialize();
             View.InitializeGenericDialogs();
             base.OnFrameworkInitializationCompleted();
         }
