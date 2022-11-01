@@ -32,6 +32,12 @@ namespace BotwSaveManager.ViewModels
             set => this.RaiseAndSetIfChanged(ref accentBrush, value);
         }
 
+        private Thickness rezisePadding = new(0);
+        public Thickness RezisePadding {
+            get => rezisePadding;
+            set => this.RaiseAndSetIfChanged(ref rezisePadding, value);
+        }
+
         public async void Convert()
         {
             try {
@@ -56,6 +62,7 @@ namespace BotwSaveManager.ViewModels
             BotwSave = save;
             Image = $"/Assets/{save.SaveType}.png";
             AccentBrush = save.SaveType == SaveType.Switch ? "#CB4041" : "#00ACCA";
+            RezisePadding = BotwSave.VersionList.Count > 8 ? new(0, 0, 0, 4) : new(0);
         }
     }
 }

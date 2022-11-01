@@ -11,30 +11,34 @@
         <ext:BitmapAssetValueConverter x:Key="VariableImage" />
         <ext:BrushConverter x:Key="HexBrush" />
     </UserControl.Resources>
-    <Grid ColumnDefinitions="170,*" RowDefinitions="170,auto,*">
+    <Grid ColumnDefinitions="170,*" RowDefinitions="170,auto,25">
         <Image Margin="20"
                VerticalAlignment="Top"
                Source="{Binding Image, Converter={StaticResource VariableImage}}" />
 
         <ListBox Grid.RowSpan="2"
                  Grid.Column="1"
-                 Margin="20"
+                 MaxHeight="365"
+                 Margin="20,20,20,0"
+                 Padding="{Binding RezisePadding}"
                  Background="Transparent"
-                 IsHitTestVisible="False"
                  Items="{Binding BotwSave.VersionList}">
             <ListBox.Styles>
                 <Style Selector="ListBoxItem">
+                    <Setter Property="IsHitTestVisible" Value="False" />
                     <Setter Property="CornerRadius" Value="5" />
                     <Setter Property="BorderBrush" Value="{Binding $parent[UserControl].DataContext.AccentBrush, Converter={StaticResource HexBrush}}" />
                     <Setter Property="BorderThickness" Value="1" />
-                    <Setter Property="Margin" Value="0,6,10,6" />
+                    <Setter Property="Margin" Value="0,6,15,6" />
                     <Setter Property="Padding" Value="20,7" />
                     <Setter Property="Opacity" Value="0.6" />
                 </Style>
             </ListBox.Styles>
         </ListBox>
 
-        <StackPanel Margin="20,20,20,25" VerticalAlignment="Bottom">
+        <StackPanel Grid.Row="1"
+                    Margin="20,20,20,5"
+                    VerticalAlignment="Bottom">
             <Button Margin="0,15"
                     HorizontalAlignment="Stretch"
                     VerticalAlignment="Bottom"
@@ -52,11 +56,11 @@
 
         <TextBlock Grid.Row="2"
                    Grid.ColumnSpan="2"
-                   Margin="0,-17,0,0"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center"
                    FontSize="10"
-                   Text="{Binding BotwSave.SourceFolder}" />
+                   Text="(Hover To View Save Path)"
+                   ToolTip.Tip="{Binding BotwSave.SourceFolder}" />
 
     </Grid>
 </UserControl>
