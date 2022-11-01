@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotwSaveManager.UI", "BotWS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotwSaveManager.Command", "BotWSaveManager.Command\BotwSaveManager.Command.csproj", "{C85DC55F-1E0A-46C9-AB26-0A3FC5F53948}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotwSaveManager", "BotwSaveManager\BotwSaveManager.csproj", "{0E27AAAF-39B4-4908-810F-F8504CB983FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BotwSaveManager", "BotwSaveManager\BotwSaveManager.csproj", "{0E27AAAF-39B4-4908-810F-F8504CB983FD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BotwSaveManager.Core", "BotwSaveManager.Core\BotwSaveManager.Core.csproj", "{7C836A47-7440-4468-9027-5C56CB5B52CB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{0E27AAAF-39B4-4908-810F-F8504CB983FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E27AAAF-39B4-4908-810F-F8504CB983FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E27AAAF-39B4-4908-810F-F8504CB983FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7C836A47-7440-4468-9027-5C56CB5B52CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C836A47-7440-4468-9027-5C56CB5B52CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C836A47-7440-4468-9027-5C56CB5B52CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C836A47-7440-4468-9027-5C56CB5B52CB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
