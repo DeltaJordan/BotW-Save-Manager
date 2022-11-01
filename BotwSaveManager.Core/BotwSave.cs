@@ -84,7 +84,7 @@ namespace BotwSaveManager.Core
 
                         // Collect version
                         string version = Versions[Headers.AsSpan().IndexOf(BitConverter.ToUInt16(headerData))];
-                        VersionList.Add(version);
+                        VersionList.Add($"Save: {Path.GetFileName(Path.GetDirectoryName(file))} - {version}");
                         Logger.Write($"Found {SaveType} version {version} on \"{file}\"");
                     }
                 }
