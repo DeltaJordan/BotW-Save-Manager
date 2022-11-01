@@ -96,5 +96,71 @@ namespace BotwSaveManager.Core
                 }
             }
         }
+
+        public void ConvertPlatform(string dst)
+        {
+            if (dst == SourceFolder) {
+                Logger.Write($"Backing up source directory...");
+                DirectoryHelper.Copy(SourceFolder, $"{SourceFolder}/backup", true);
+            }
+            else {
+                Logger.Write($"Copying save files to the output directory...");
+                DirectoryHelper.Copy(SourceFolder, dst, true);
+                SourceFolder = dst;
+            }
+
+            foreach (var file in Directory.EnumerateFiles(SourceFolder, "*.sav", SearchOption.AllDirectories)) {
+
+                Logger.Write($"Converting {file}...");
+
+                // Read file into memory
+                byte[] data = File.ReadAllBytes(file);
+                using MemoryStream stream = new(data);
+                using BinaryReader reader = new(stream);
+                using BinaryWriter writer = new(stream);
+
+                for (int pos = 0; pos < data.Length / 4; pos++) {
+
+                    // Inverse trackblock headers
+                    if (file.Contains("trackblock") && pos == 0) {
+                        stream.Position = 4;
+                        writer.ReverseBuffer(stream, reader.ReadBytes(2));
+                        pos = 2;
+                    }
+
+                    stream.Position = pos * 4;
+                    byte[] buffer = reader.ReadBytes(4);
+
+                    if (Hashes.Contains(BitConverter.ToUInt32(buffer))) {
+                        writer.ReverseBuffer(stream, buffer);
+                        pos++;
+                        Skip = true;
+                    }
+                    else {
+                        Skip = false;
+                    }
+
+                    if (!Skip && !Items.Any(x => Encoding.UTF8.GetString(buffer).Contains(x))) {
+                        writer.ReverseBuffer(stream, buffer);
+                    }
+                    else if (Skip == false) {
+                        pos++;
+                        for (int i = 0; i < 16; i++) {
+                            stream.Position = (pos + (i * 2)) * 4;
+                            buffer = reader.ReadBytes(4);
+                            writer.ReverseBuffer(stream, buffer);
+                        }
+
+                        pos += 30; // 0x1E
+                    }
+                }
+
+                writer.Flush();
+                File.WriteAllBytes(file, stream.ToArray());
+                Logger.Write($"Successfully converted {file}...");
+            }
+
+            SaveType = SaveType.Reverse();
+        }
     }
 }
