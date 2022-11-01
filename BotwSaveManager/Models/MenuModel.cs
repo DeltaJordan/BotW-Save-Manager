@@ -24,7 +24,8 @@ namespace BotwSaveManager.Models
 
             if (folder != null) {
                 try {
-                    ViewModel.BotwSave = new(folder, true);
+                    BotwSave save = new(folder, true);
+                    ViewModel.Content = new BotwSaveView(save);
                 }
                 catch (Exception ex)  {
                     Logger.Write(ex);
