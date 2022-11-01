@@ -31,4 +31,7 @@
     <PackageReference Include="Material.Icons.Avalonia" Version="1.2.0" />
     <PackageReference Include="XamlNameReferenceGenerator" Version="1.3.4" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BotwSaveManager.Core\BotwSaveManager.Core.csproj" />
+  </ItemGroup>
 </Project>
