@@ -18,7 +18,7 @@ namespace BotwSaveManager
     {
         public static AppView View { get; set; }
         public static AppViewModel ViewModel { get; set; }
-        public static FluentTheme Theme { get; set; } = new(new Uri("avares://BotwActorTool.GUI/Styles"));
+        public static FluentTheme Theme { get; set; } = new(new Uri("avares://BotwSaveManager/Styles"));
 
         public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
