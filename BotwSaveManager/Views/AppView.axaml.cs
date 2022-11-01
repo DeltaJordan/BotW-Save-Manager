@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Markup.Xaml;
@@ -10,6 +11,7 @@ namespace BotwSaveManager.Views
 {
     public partial class AppView : Window
     {
+        public MenuModel MenuModel = new();
         public AppView()
         {
             AvaloniaXamlLoader.Load(this);
@@ -17,7 +19,7 @@ namespace BotwSaveManager.Views
             this.AttachDevTools();
 #endif
 
-            this.FindControl<Menu>("RootMenu")!.Items = MenuFactory.Generate(new MenuModel());
+            this.FindControl<Menu>("RootMenu")!.Items = MenuFactory.Generate(MenuModel);
 
             DropTarget = this.FindControl<Grid>("DropTarget");
             DropTarget!.AddHandler(DragDrop.DropEvent, DragDropEvent);
