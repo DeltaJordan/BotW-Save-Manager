@@ -4,13 +4,13 @@
 
 ---
 
-**Botw Save Manager** is a fork of [`https://github.com/WemI0/BOTW_SaveConv`](https://github.com/WemI0/BOTW_SaveConv) updated to `DotNET 6` with support for `Windows`, `Linux`, and `MacOS (untested)`.
+**Botw Save Manager** is a fork of [`https://github.com/WemI0/BOTW_SaveConv`](https://github.com/WemI0/BOTW_SaveConv) updated to `DotNET 6` with full support for `Windows` and `Linux`.
 
 Converting currently supports BOTW `Switch <-> WiiU` save files that share the same update version (upgrade/downgrade untested).
 
 ## Setup
 
-1. Download and install the DotNET 6.0 Runtime for your system: [Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.10-windows-x64-installer), [Linux](https://learn.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website), [MacOS Arm64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.10-macos-arm64-installer), [MacOS x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.10-macos-x64-installer)
+1. Download and install the DotNET 6.0 Runtime for your system: [Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.10-windows-x64-installer) or [Linux](https://learn.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
 2. Download the [latest release]() of BotwSaveEditor.
 3. Run `BotwSaveEditor.exe` and bypass the smartscreen warning. *(This warning is caused by the unsigned **.exe**. Signing applications can become expensive, so it is impractical for community project such as this.)*
 
