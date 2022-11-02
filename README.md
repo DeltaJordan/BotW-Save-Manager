@@ -1,10 +1,10 @@
 # Breath of the Wild Save Manager
 
-***This tool is <ins>not</ins> a save <ins>editor</ins>! If you are looking to edit your save, use Marc Robledo's [BOTW save editor](https://www.marcrobledo.com/savegame-editors/zelda-botw/) to modify the contents of your save. This works for both WiiU and Switch files.***
+**_This tool is NOT a save editor! If you are looking to edit your save, use Marc Robledo's [BOTW save editor](https://www.marcrobledo.com/savegame-editors/zelda-botw/) to modify the contents of your save. This works for both WiiU and Switch files._**
 
 ---
 
-**Botw Save Manager** is a fork of [`https://github.com/WemI0/BOTW_SaveConv`](https://github.com/WemI0/BOTW_SaveConv) updated to `DotNET 6` with full support for `Windows` and `Linux`.
+**Botw Save Manager** is a fork of [https://github.com/WemI0/BOTW_SaveConv](https://github.com/WemI0/BOTW_SaveConv) updated to `DotNET 6` with full support for `Windows` and `Linux`.
 
 Converting currently supports BOTW `Switch <-> WiiU` save files that share the same update version (upgrade/downgrade untested).
 
@@ -18,14 +18,14 @@ Converting currently supports BOTW `Switch <-> WiiU` save files that share the s
 
 ### Desktop Application
 
-**<ins>Normal Method</ins>:**
+**Normal Method:**
 
 1. To open a save, use `File > Open Save Folder (Ctrl + O)` or double click the UI to browse for a WiiU or Switch save folder; alternatively, drag the save folder over the UI.
 2. Once the save has opened, click `Convert` and browse for an empty folder to save the converted files to.
 3. A debug log will appear and log the converting process.
 4. Once it has completed, and there are no errors, a prompt will appear saying the conversion was successful.
 
-**<ins>Quick Method</ins>:**
+**Quick Method:**
 
 1. Quickly convert a save by using `File > Convert Save (F3)` and navigating to a WiiU or Switch save folder.
 2. In the second folder selection prompt, browse for an empty folder to save the converted files to.
