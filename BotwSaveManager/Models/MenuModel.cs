@@ -56,10 +56,16 @@ namespace BotwSaveManager.Models
             }
         }
 
-        [Menu("Open Debug Log", "_File", "F5", Icon = MaterialIconKind.FileDocumentErrorOutline, IsSeparator = true)]
-        public void OpenLog()
+        [Menu("Open Debug Log", "_File", Icon = MaterialIconKind.FileDocumentErrorOutline, IsSeparator = true)]
+        public void OpenDebugLog()
         {
             App.LogsView.Load();
+        }
+
+        [Menu("Clear Debug Log", "_File", Icon = MaterialIconKind.FileDocumentRemoveOutline)]
+        public void ClearDebugLog()
+        {
+            (App.LogsView.DataContext as LogsViewModel)?.LogTrace.Clear();
         }
 
         [Menu("Quit", "_File", "Alt + F4", Icon = MaterialIconKind.ExitToApp, IsSeparator = true)]
