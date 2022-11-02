@@ -45,10 +45,11 @@ namespace BotwSaveManager.Models
                     if (await MessageBox.Show($"Identified {save.SaveType} save, convert to {save.SaveType.Reverse()}?", "Notice", MessageBoxButtons.YesNoCancel, icon: MaterialIconKind.ContentSaveMoveOutline) == MessageBoxResult.Yes) {
                         string? output = await BrowserDialog.Folder.ShowDialog("Open Botw Save Folder");
                         if (output != null) {
+                            App.LogsView.Load();
                             await Task.Run(() => save.ConvertPlatform(output));
                             await MessageBox.Show($"Save succefully converted!", "Notice", icon: MaterialIconKind.InfoCircleOutline);
+                            App.LogsView.Unload();
                         }
-
                     }
                 }
                 catch (Exception ex) {

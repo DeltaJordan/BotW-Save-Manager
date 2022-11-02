@@ -23,6 +23,8 @@ namespace BotwSaveManager.Views
             LogTraceBox.ScrollIntoView(LogTraceBox.ItemCount - 1);
         }
 
+        public void Unload() => ViewModel.Content = null;
+
         public void Write(string message)
         {
             Dispatcher.UIThread.InvokeAsync(() => {

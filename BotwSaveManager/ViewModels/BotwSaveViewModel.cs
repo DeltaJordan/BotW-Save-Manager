@@ -43,8 +43,10 @@ namespace BotwSaveManager.ViewModels
             try {
                 string? output = await BrowserDialog.Folder.ShowDialog("Open Botw Save Folder");
                 if (output != null) {
+                    LogsView.Load();
                     await Task.Run(() => BotwSave.ConvertPlatform(output));
                     await MessageBox.Show($"Save succefully converted!", "Notice", icon: MaterialIconKind.InfoCircleOutline);
+                    LogsView.Unload();
                 }
 
                 ViewModel.Content = null;
