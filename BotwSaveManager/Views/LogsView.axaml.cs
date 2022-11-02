@@ -27,7 +27,9 @@ namespace BotwSaveManager.Views
         {
             Dispatcher.UIThread.InvokeAsync(() => {
                 int idx = message.LastIndexOf('|');
-                (DataContext as LogsViewModel)!.LogTrace.Add(new(message[..idx].Trim(), message[(idx + 1)..].Trim()));
+                string meta = message[..idx];
+                string msg = message[(idx + 1)..].Replace(new string(' ', meta.Length+2), "");
+                (DataContext as LogsViewModel)!.LogTrace.Add(new(meta.Trim(), msg.Trim()));
                 LogTraceBox.ScrollIntoView(LogTraceBox.ItemCount - 1);
             });
         }
