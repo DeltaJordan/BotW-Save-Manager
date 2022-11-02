@@ -11,8 +11,8 @@ namespace BotwSaveManager.Core.Helpers
 
         public static void Initialize(TraceListener? customListener = null)
         {
-            Directory.CreateDirectory(".\\Logs");
-            CurrentLog = $".\\Logs\\{DateTime.Now:yyyy-MM-dd-HH-mm}.log";
+            Directory.CreateDirectory("./Logs");
+            CurrentLog = $"./Logs/{DateTime.Now:yyyy-MM-dd-HH-mm}.log";
             TextWriterTraceListener listener = new(CurrentLog);
 
             AddTraceListener(listener, 1);
