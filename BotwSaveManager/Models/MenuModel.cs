@@ -71,7 +71,7 @@ namespace BotwSaveManager.Models
         }
 
         [Menu("Clear Logs Folder", "_File", Icon = MaterialIconKind.FolderCancelOutline, IsSeparator = true)]
-        public void ClearLogsFolder()
+        public async void ClearLogsFolder()
         {
             Logger.Write("Clearing logs folder...");
 
@@ -83,7 +83,9 @@ namespace BotwSaveManager.Models
                 }
             }
 
-            Logger.Write($"Removed {i} logs from \"./Logs\"");
+            string prompt = $"Removed {i} logs from \"./Logs\"";
+            await MessageBox.Show(prompt, "Notice", icon: MaterialIconKind.InfoCircleOutline);
+            Logger.Write(prompt);
         }
 
         [Menu("Quit", "_File", "Alt + F4", Icon = MaterialIconKind.ExitToApp, IsSeparator = true)]
