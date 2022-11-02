@@ -45,6 +45,7 @@ jobs:
       - name: Publish ${{ env.proj_console }}
         run: dotnet publish ${{ env.proj_console }}/${{ env.proj_console }}.csproj -r linux-x64 --configuration Release --version-suffix ${{ steps.version.outputs.version-without-v }} --output ${{ env.build_linux }} --sc false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
 
+      # Create Release
       - name: "Create Release"
         id: create_release
         uses: actions/create-release@v1
@@ -53,6 +54,9 @@ jobs:
         with:
           tag_name: ${{ steps.version.outputs.version }}
           release_name: BotwSaveManager - ${{ steps.version.outputs.version }}
+
+          if: ${{ contains(steps.version.outputs.version, "alpha") || contains(steps.version.outputs.version, "beta") }}
+          prerelease: true
 
       # Windows
       - name: "Upload release asset"
