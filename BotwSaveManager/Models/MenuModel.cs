@@ -2,11 +2,13 @@
 using AvaloniaGenerics.Dialogs;
 using BotwSaveManager.Core;
 using BotwSaveManager.Core.Helpers;
+using BotwSaveManager.ViewModels;
 using BotwSaveManager.Views;
 using Material.Icons;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -90,17 +92,17 @@ namespace BotwSaveManager.Models
             Environment.Exit(0);
         }
 
-        [Menu("Readme", "_About", Icon = MaterialIconKind.HandshakeOutline)]
-        public async void Readme()
-        {
-            await MessageBox.Show(Resource.Load("README.md").ToString(), "Readme", formatting: Formatting.Markdown, icon: MaterialIconKind.HandshakeOutline);
-        }
-
-        [Menu("Help", "_About", Icon = MaterialIconKind.Help)]
+        [Menu("Help", "_About", "F1", Icon = MaterialIconKind.Help)]
         public void Help()
         {
             HelpView help = new();
             help.ShowDialog(View);
+        }
+
+        [Menu("Readme", "_About", "F2", Icon = MaterialIconKind.HandshakeOutline)]
+        public async void Readme()
+        {
+            await MessageBox.Show(Resource.Load("README.md").ToString(), "Readme", formatting: Formatting.Markdown, icon: MaterialIconKind.HandshakeOutline);
         }
     }
 }
