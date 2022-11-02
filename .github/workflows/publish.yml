@@ -55,7 +55,7 @@ jobs:
           tag_name: ${{ steps.version.outputs.version }}
           release_name: BotwSaveManager - ${{ steps.version.outputs.version }}
 
-          if: ${{ contains( ${{ steps.version.outputs.version }}, alpha ) || contains( ${{ steps.version.outputs.version }}, beta ) }}
+          if: ${{ contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'beta') }}
           prerelease: true
 
       # Windows
