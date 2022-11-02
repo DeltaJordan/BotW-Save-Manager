@@ -64,7 +64,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.build_windows }}/${{ env.proj_desktop }}.exe
-          asset_name: ${{ env.proj_desktop }}-win.exe
+          asset_name: ${{ env.proj_desktop }}-${{ steps.version.outputs.version }}.exe
           asset_content_type: application/zip
 
       - name: "Upload release asset"
@@ -74,7 +74,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.build_windows }}/${{ env.proj_console }}.exe
-          asset_name: ${{ env.proj_console }}-win.exe
+          asset_name: ${{ env.proj_console }}-${{ steps.version.outputs.version }}.exe
           asset_content_type: application/zip
 
       # Linux
@@ -85,7 +85,7 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.build_linux }}/${{ env.proj_desktop }}
-          asset_name: ${{ env.proj_desktop }}-linux
+          asset_name: ${{ env.proj_desktop }}-${{ steps.version.outputs.version }}
           asset_content_type: application/zip
 
       - name: "Upload release asset"
@@ -95,5 +95,5 @@ jobs:
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ${{ env.build_linux }}/${{ env.proj_console }}
-          asset_name: ${{ env.proj_console }}-linux
+          asset_name: ${{ env.proj_console }}-${{ steps.version.outputs.version }}
           asset_content_type: application/zip
