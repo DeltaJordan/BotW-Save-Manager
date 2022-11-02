@@ -1,0 +1,88 @@
+name: Deploy
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  build_windows: "${{ github.workspace }}/build_windows"
+  build_linux: "${{ github.workspace }}/build_linux"
+
+jobs:
+  deploy_botw_save_manager_windows:
+    name: "Deploy BotwSaveManager"
+    runs-on: windows-latest
+
+    env:
+      proj_desktop: "BotwSaveManager"
+      proj_console: "BotwSaveManager.Console"
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v2
+
+      - name: Install DotNET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: "Get Version"
+        id: version
+        uses: battila7/get-version-action@v2
+
+      # Windows
+      - name: Publish ${{ env.proj_desktop }}
+        run: dotnet publish ${{ env.proj_desktop }}/${{ env.proj_desktop }}.csproj -r win-x64 --configuration Release --version-suffix ${{ steps.version.outputs.version-without-v }} --output ${{ env.build_windows }} --sc false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+
+      - name: Publish ${{ env.proj_console }}
+        run: dotnet publish ${{ env.proj_console }}/${{ env.proj_console }}.csproj -r win-x64 --configuration Release --version-suffix ${{ steps.version.outputs.version-without-v }} --output ${{ env.build_windows }} --sc false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+
+      # Linux
+      - name: Publish ${{ env.proj_desktop }}
+        run: dotnet publish ${{ env.proj_desktop }}/${{ env.proj_desktop }}.csproj -r linux-x64 --configuration Release --version-suffix ${{ steps.version.outputs.version-without-v }} --output ${{ env.build_linux }} --sc false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+
+      - name: Publish ${{ env.proj_console }}
+        run: dotnet publish ${{ env.proj_console }}/${{ env.proj_console }}.csproj -r linux-x64 --configuration Release --version-suffix ${{ steps.version.outputs.version-without-v }} --output ${{ env.build_linux }} --sc false -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
+
+      # Windows
+      - name: "Upload release asset"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.build_windows }}/${{ env.proj_desktop }}.exe
+          asset_name: ${{ env.proj_desktop }}-win.exe
+          asset_content_type: application/zip
+
+      - name: "Upload release asset"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.build_windows }}/${{ env.proj_console }}.exe
+          asset_name: ${{ env.proj_console }}-win.exe
+          asset_content_type: application/zip
+
+      # Linux
+      - name: "Upload release asset"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.build_linux }}/${{ env.proj_desktop }}
+          asset_name: ${{ env.proj_desktop }}-linux
+          asset_content_type: application/zip
+
+      - name: "Upload release asset"
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.github_token }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.build_linux }}/${{ env.proj_console }}
+          asset_name: ${{ env.proj_console }}-linux
+          asset_content_type: application/zip
