@@ -84,7 +84,7 @@ namespace BotwSaveManager.Models
                 }
             }
 
-            string prompt = $"Removed {i} logs from \"./Logs\"";
+            string prompt = $"Removed {i} log(s) from \"./Logs\"";
             await MessageBox.Show(prompt, "Notice", icon: MaterialIconKind.InfoCircleOutline);
             Logger.Write(prompt);
         }
