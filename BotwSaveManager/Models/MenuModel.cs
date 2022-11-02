@@ -68,6 +68,22 @@ namespace BotwSaveManager.Models
             (App.LogsView.DataContext as LogsViewModel)?.LogTrace.Clear();
         }
 
+        [Menu("Clear Logs Folder", "_File", Icon = MaterialIconKind.FolderCancelOutline, IsSeparator = true)]
+        public void ClearLogsFolder()
+        {
+            Logger.Write("Clearing logs folder...");
+
+            int i = 0;
+            foreach (var file in Directory.EnumerateFiles($"./Logs", "*.log", SearchOption.TopDirectoryOnly)) {
+                if (!file.ToCommonPath().EndsWith(Logger.CurrentLog!)) {
+                    File.Delete(file);
+                    i++;
+                }
+            }
+
+            Logger.Write($"Removed {i} logs from \"./Logs\"");
+        }
+
         [Menu("Quit", "_File", "Alt + F4", Icon = MaterialIconKind.ExitToApp, IsSeparator = true)]
         public async void Quit()
         {
