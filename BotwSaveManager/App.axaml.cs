@@ -8,6 +8,7 @@ using Avalonia.Markup.Xaml;
 using Avalonia.Themes.Fluent;
 using AvaloniaGenerics.Dialogs;
 using BotwSaveManager.Core.Helpers;
+using BotwSaveManager.Helpers;
 using BotwSaveManager.ViewModels;
 using BotwSaveManager.Views;
 using System;
@@ -18,6 +19,7 @@ namespace BotwSaveManager
     {
         public static AppView View { get; set; }
         public static AppViewModel ViewModel { get; set; }
+        public static LogsView LogsView { get; set; } = new();
         public static FluentTheme Theme { get; set; } = new(new Uri("avares://BotwSaveManager/Styles"));
 
         public override void Initialize() => AvaloniaXamlLoader.Load(this);
@@ -34,7 +36,7 @@ namespace BotwSaveManager
                 desktop.MainWindow = View;
             }
 
-            Logger.Initialize();
+            Logger.Initialize(new LogsViewTraceListener(LogsView.Write));
             View.InitializeGenericDialogs();
             base.OnFrameworkInitializationCompleted();
         }

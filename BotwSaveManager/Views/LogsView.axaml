@@ -1,0 +1,51 @@
+<UserControl x:Class="BotwSaveManager.Views.LogsView"
+             xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mdix="using:Material.Icons.Avalonia"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
+    <Grid>
+        <ListBox Name="LogTraceBox"
+                 Margin="10"
+                 Background="Transparent"
+                 Items="{Binding LogTrace}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                 SelectedItem="{Binding Selected}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Padding="5,2"
+                            Background="Transparent"
+                            ToolTip.Tip="{Binding Meta}">
+                        <TextBlock MaxWidth="600"
+                                   FontFamily="Consolas"
+                                   FontSize="10"
+                                   Text="{Binding Message}" />
+                        <Border.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Command="{Binding $parent[UserControl].DataContext.Copy}"
+                                          Header="Copy"
+                                          HotKey="Ctrl+C"
+                                          InputGesture="Ctrl + C">
+                                    <MenuItem.Icon>
+                                        <mdix:MaterialIcon Kind="ContentCopy" />
+                                    </MenuItem.Icon>
+                                </MenuItem>
+                            </ContextMenu>
+                        </Border.ContextMenu>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+            <ListBox.Styles>
+                <Style Selector="ListBoxItem">
+                    <Setter Property="CornerRadius" Value="2" />
+                    <Setter Property="Margin" Value="0,2,5,2" />
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Opacity" Value="0.6" />
+                </Style>
+            </ListBox.Styles>
+        </ListBox>
+    </Grid>
+</UserControl>

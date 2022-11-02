@@ -56,6 +56,12 @@ namespace BotwSaveManager.Models
             }
         }
 
+        [Menu("Open Debug Log", "_File", "F5", Icon = MaterialIconKind.FileDocumentErrorOutline, IsSeparator = true)]
+        public void OpenLog()
+        {
+            App.LogsView.Load();
+        }
+
         [Menu("Quit", "_File", "Alt + F4", Icon = MaterialIconKind.ExitToApp, IsSeparator = true)]
         public async void Quit()
         {

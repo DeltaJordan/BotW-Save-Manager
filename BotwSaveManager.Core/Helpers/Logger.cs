@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace BotwSaveManager.Core.Helpers
 {
     public static class Logger
     {
-        private static string SourceRoot = "F:\\GitHub\\BotwSaveManager";
+        private static readonly string SourceRoot = "F:\\GitHub\\BotwSaveManager";
 
-        public static void Initialize()
+        public static string? CurrentLog { get; set; }
+
+        public static void Initialize(TraceListener? customListener = null)
         {
-            TextWriterTraceListener listener = new($".\\{DateTime.Now:yyyy-MM-dd-HH-mm}.log");
+            Directory.CreateDirectory(".\\Logs");
+            CurrentLog = $".\\Logs\\{DateTime.Now:yyyy-MM-dd-HH-mm}.log";
+            TextWriterTraceListener listener = new(CurrentLog);
 
-            if (Trace.Listeners.Count > 1) {
-                Trace.Listeners[1] = listener;
-            }
-            else {
-                Trace.Listeners.Add(listener);
+            AddTraceListener(listener, 1);
+
+            if (customListener != null) {
+                AddTraceListener(customListener, 2);
             }
 
             Trace.AutoFlush = true;
@@ -31,6 +28,16 @@ namespace BotwSaveManager.Core.Helpers
         {
             string meta = $"{DateTime.Now:dd:mm:ss:fff} [{method}] | \"{Path.GetRelativePath(SourceRoot, filepath)}\":{lineNumber} | ";
             Trace.WriteLine($"{meta}{msg.ToString()?.Replace("\n", $"\n{new string(' ', meta.Length)}")}".ToCommonPath());
+        }
+
+        private static void AddTraceListener(TraceListener listener, int pos)
+        {
+            if (Trace.Listeners.Count > pos) {
+                Trace.Listeners[pos] = listener;
+            }
+            else {
+                Trace.Listeners.Add(listener);
+            }
         }
     }
 }
