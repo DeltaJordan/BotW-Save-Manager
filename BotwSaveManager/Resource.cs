@@ -18,15 +18,15 @@ namespace BotwSaveManager
         public Resource(byte[] data) => Data = data;
         public Resource(string name, string root)
         {
-            if (File.Exists($"{root}/{name}")) {
-                Data = File.ReadAllBytes($"{root}/{name}");
+            if (File.Exists(Path.Combine(root, name))) {
+                Data = File.ReadAllBytes(Path.Combine(root, name));
             }
             else if (File.Exists($"{AppDomain.CurrentDomain.BaseDirectory}/{root}/{name}")) {
                 Data = File.ReadAllBytes($"{AppDomain.CurrentDomain.BaseDirectory}/{root}/{name}");
             }
             else {
 
-                string embed = $"{root}/{name}".ToCommonPath().Replace("/", ".");
+                string embed = Path.Combine(root, name).ToCommonPath().Replace("/", ".");
                 Stream? stream = Assembly.GetCallingAssembly()?.GetManifestResourceStream(embed);
 
                 if (stream != null) {
