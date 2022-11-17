@@ -5,7 +5,7 @@ using BotwSaveManager.Core;
 using BotwSaveManager.Core.Helpers;
 using System.Diagnostics;
 
-Console.WriteLine("Breath of the Wild Save Manager by Jordan Zeotni, fork of https://github.com/WemI0/BOTW_SaveConv, rewritten and updated by Arch Leaders\n\n");
+Console.WriteLine("Breath of the Wild Save Manager by Jordan Marine, fork of https://github.com/WemI0/BOTW_SaveConv, rewritten and updated by Arch Leaders\n\n");
 Console.Write("Drag and drop your save folder here and press enter: ");
 string? input = Console.ReadLine();
 
