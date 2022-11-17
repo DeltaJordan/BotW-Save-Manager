@@ -5,7 +5,7 @@ namespace BotwSaveManager.Core.Helpers
 {
     public static class Logger
     {
-        private static readonly string SourceRoot = "F:\\GitHub\\BotwSaveManager";
+        private static readonly string SourceRoot = "D:\\a\\BotwSaveManager\\BotwSaveManager";
 
         public static string? CurrentLog { get; set; }
 
