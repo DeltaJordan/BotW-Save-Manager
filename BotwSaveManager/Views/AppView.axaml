@@ -1,0 +1,86 @@
+<Window x:Class="BotwSaveManager.Views.AppView"
+        xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:app="using:BotwSaveManager"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:mdix="using:Material.Icons.Avalonia"
+        Title="{x:Static app:Meta.Name}"
+        Width="640"
+        Height="450"
+        d:DesignHeight="450"
+        d:DesignWidth="640"
+        Background="{DynamicResource SystemChromeLowColor}"
+        CanResize="False"
+        ExtendClientAreaChromeHints="NoChrome"
+        ExtendClientAreaToDecorationsHint="True"
+        Icon="/Assets/icon.ico"
+        mc:Ignorable="d">
+
+    <Grid RowDefinitions="30,*">
+
+        <Grid>
+            <Border Background="{DynamicResource SystemChromeHighColor}"
+                    IsHitTestVisible="False"
+                    Opacity="0.6" />
+            <Image Width="24"
+                   Margin="3"
+                   HorizontalAlignment="Left"
+                   Source="/Assets/icon.ico" />
+            <Menu Name="RootMenu"
+                  Margin="30,0,0,0"
+                  HorizontalAlignment="Left" />
+            <TextBlock HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontSize="11"
+                       IsHitTestVisible="False"
+                       Text="{x:Static app:Meta.Footer}" />
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <StackPanel.Styles>
+                    <Style Selector="Button">
+                        <Setter Property="Background" Value="Transparent" />
+                        <Setter Property="CornerRadius" Value="0" />
+                    </Style>
+                    <Style Selector="Button:disabled /template/ ContentPresenter#PART_ContentPresenter">
+                        <Setter Property="Background" Value="Transparent" />
+                    </Style>
+                    <Style Selector="mdix|MaterialIcon">
+                        <Setter Property="Width" Value="24" />
+                        <Setter Property="Height" Value="24" />
+                        <Setter Property="HorizontalAlignment" Value="Center" />
+                        <Setter Property="VerticalAlignment" Value="Center" />
+                        <Setter Property="Margin" Value="0,1,0,0" />
+                    </Style>
+                </StackPanel.Styles>
+                <Button Width="40"
+                        Height="30"
+                        Command="{Binding Minimize}"
+                        IsVisible="{x:Static app:Meta.IsWindows}">
+                    <mdix:MaterialIcon Margin="0,2,0,0" Kind="Minus" />
+                </Button>
+                <Button Width="40"
+                        Height="30"
+                        IsEnabled="False"
+                        IsVisible="{x:Static app:Meta.IsWindows}">
+                    <mdix:MaterialIcon Kind="Fullscreen" />
+                </Button>
+                <Button Width="40"
+                        Height="30"
+                        Command="{Binding Quit}"
+                        IsVisible="{x:Static app:Meta.IsWindows}">
+                    <mdix:MaterialIcon Kind="Close" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+
+        <Grid Name="DropTarget"
+              Grid.Row="1"
+              Background="Transparent"
+              DragDrop.AllowDrop="True">
+            <ContentControl Content="{Binding Content}" />
+        </Grid>
+    </Grid>
+
+
+</Window>

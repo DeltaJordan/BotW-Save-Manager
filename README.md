@@ -1,30 +1,40 @@
 # Breath of the Wild Save Manager
 
-*This tool is useless if all you want to do is edit your save, the following link can directly edit Switch saves without any conversion: https://www.marcrobledo.com/savegame-editors/zelda-botw/*
+**_This tool is NOT a save editor! If you are looking to edit your save, use Marc Robledo's [BOTW save editor](https://www.marcrobledo.com/savegame-editors/zelda-botw/) to modify the contents of your save. This works for both WiiU and Switch files._**
 
-**Note: Make sure both versions of BotW have the same update version**
+---
 
-BotW Save Manager is a fork of https://github.com/WemI0/BOTW_SaveConv that at the moment can convert Switch <-> Wii U BotW save files. It currently has been written with .Net Framework for Windows with UI, and .Net Core (command-line only) for cross-compatibility.
+**Botw Save Manager** is a fork of [https://github.com/WemI0/BOTW_SaveConv](https://github.com/WemI0/BOTW_SaveConv) updated to `DotNET 6` with full support for `Windows` and `Linux`.
 
-## Usage:
+Converting currently supports BOTW `Switch <-> WiiU` save files that share the same update version (upgrade/downgrade untested).
 
-### Windows-only UI
+## Setup
 
-1. Select File > Open save > The folder that contains "option.sav".
-2. Click convert and wait for it to finish.
-3. Click Browse to the folder you want to save it to, preferrably an empty folder.
-4. Click Save and the application should write it to the folder.
+1. Download and install the DotNET 6.0 Runtime for your system: [Windows x64](https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-6.0.10-windows-x64-installer) or [Linux](https://learn.microsoft.com/dotnet/core/install/linux?WT.mc_id=dotnet-35129-website)
+2. Download the [latest release]() of BotwSaveEditor.
+3. Run `BotwSaveEditor.exe` and bypass the smartscreen warning. *(This warning is caused by the unsigned **.exe**. Signing applications can become expensive, so it is impractical for community project such as this.)*
 
-### Cross-platform command-line
+## Usage
 
-1. Enter the path of option.sav when prompted.
-2. Wait for the files to convert.
-3. Either select a folder for it to save to or press Enter to overwrite your save with the converted version.
-4. Once it finishes you'll be good to go to copy it to your console.
+### Desktop Application
 
-## Dependencies:
+**Normal Method:**
 
-* Windows
-  * [.Net Framework 4.7](https://www.microsoft.com/en-us/download/details.aspx?id=55170)
-* Other
-  * .Net Core - varies by system
+1. To open a save, use `File > Open Save Folder (Ctrl + O)` or double click the UI to browse for a WiiU or Switch save folder; alternatively, drag the save folder over the UI.
+2. Once the save has opened, click `Convert` and browse for an empty folder to save the converted files to.
+3. A debug log will appear and log the converting process.
+4. Once it has completed, and there are no errors, a prompt will appear saying the conversion was successful.
+
+**Quick Method:**
+
+1. Quickly convert a save by using `File > Convert Save (F3)` and navigating to a WiiU or Switch save folder.
+2. In the second folder selection prompt, browse for an empty folder to save the converted files to.
+3. A debug log will appear and log the converting process.
+4. Once it has completed, and there are no errors, a prompt will appear saying the conversion was successful.
+
+
+### Console Application
+
+1. Drag and drop a WiiU or Switch save folder over the console window as prompted.
+2. Wait for the save to process, then drag an empty folder over the console window to save the converted files to.
+3. Wait once more for the completion message.
