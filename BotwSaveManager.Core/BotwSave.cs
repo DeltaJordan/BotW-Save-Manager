@@ -44,7 +44,10 @@ namespace BotwSaveManager.Core
             0xFD71ABCC, 0xCBC6B5E4, 0xE4B5C6CB, 0x2CADB0E7, 0xE7B0AD2C, 0xA6EB3EF4, 0xF43EEBA6,
             0x21D4CFFA, 0xFACFD421, 0x22A510D1, 0xD110A522, 0x98D10D53, 0x530DD198, 0x55A22047,
             0x4720A255, 0xE5A63A33, 0x333AA6E5, 0xBEC65061, 0x6150C6BE, 0xBC118370, 0x708311BC,
-            0x0E9D0E75, 0x750E9D0E
+            0x0E9D0E75, 0x750E9D0E,
+            // String field IDs in both byte orders: reverse the ID, not its UTF-8 value.
+            0x0BEE9E46, 0x469EEE0B, // PlayerSavePosMapName (string32)
+            0x1C10782F, 0x2F78101C  // WolfLink_TodayFirstDetectedUID (string64)
         };
 
         public SaveType SaveType { get; set; }
